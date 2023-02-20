@@ -13,7 +13,7 @@ namespace SSR.WebAPI.Models
 		public TrangThaiShort TrangThai { get; set; }
 		public int ThuTu { get; set; }
 		[BsonIgnore]
-		public string Ten { get; set; }
+		public string Name { get; set; }
 	}
 }
 

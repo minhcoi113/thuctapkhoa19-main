@@ -52,7 +52,7 @@ export default {
   validations: {
     model: {
       maDonVi: {required},
-      ten: {required},
+      name: {required},
       capDV: {required}
     },
   },
@@ -64,9 +64,9 @@ export default {
       this.itemFilter.code= null;
       this.itemFilter.name= null;
     },
-    addCoQuanToModel(node, instanceId) {
+    addDonViToModel(node, instanceId) {
       if (node.id) {
-        this.model.donViCha = node.id;
+        this.model.parentId = node.id;
       }
     },
     normalizer(node) {
@@ -266,7 +266,7 @@ export default {
                     <label class="text-left">Mã đơn vị</label>
                     <span style="color: red">&nbsp;*</span>
                     <input
-                        id="ten"
+                        id="id"
                         v-model="model.maDonVi"
                         type="text"
                         class="form-control"
@@ -288,17 +288,17 @@ export default {
                     <span style="color: red">&nbsp;*</span>
                     <input
                         id="path"
-                        v-model="model.ten"
+                        v-model="model.name"
                         type="text"
                         class="form-control"
                         placeholder="Nhập tên đơn vị"
                         :class="{
                                                       'is-invalid':
-                                                        submitted && $v.model.ten.$error,
+                                                        submitted && $v.model.name.$error,
                                                     }"
                     />
                     <div
-                        v-if="submitted && !$v.model.ten.required"
+                        v-if="submitted && !$v.model.name.required"
                         class="invalid-feedback"
                     >
                       Tên đơn vị không được trống.
@@ -328,10 +328,10 @@ export default {
                   <div class="mb-3">
                     <label class="text-left">Đơn vị cha</label>
                     <treeselect
-                        v-on:select="addCoQuanToModel"
+                        v-on:select="addDonViToModel"
                         :normalizer="normalizer"
                         :options="treeView"
-                        :value="model.donViCha"
+                        :value="model.parentId"
                         :searchable="true"
                         :show-count="true"
                         :default-expand-level="1"

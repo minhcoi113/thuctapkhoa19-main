@@ -20,7 +20,9 @@ builder.Services.AddCors(options =>
                 "http://localhost:3000",
                 "http://localhost:52911",
                 "https://portal.anhdev99.com",
-                "https://cyber.anhdev99.com")
+                "https://cyber.anhdev99.com",
+                "http://localhost:8080",
+                 "http://localhost:5001")
             .AllowCredentials()
     );
 });

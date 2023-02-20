@@ -9,7 +9,7 @@ namespace SSR.WebAPI.Models
         [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
         public string Id { get; set; }
 		public string SoThuTu { get; set; }
-		public string Ten { get; set; }
+		public string Name { get; set; }
 		public float DiemToiDa { get; set; }
 		public string CachXacDinhVaTinhDiem { get; set; }
 		public LoaiSoLieuKeKhaiShort LoaiSoLieuKeKhai { get; set; }

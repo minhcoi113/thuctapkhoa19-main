@@ -8,7 +8,7 @@ namespace SSR.WebAPI.Models
         [BsonId]
         [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
         public string Id { get; set; }
-		public string Ten { get; set; }
+		public string Name { get; set; }
 		public DateTime NgayBatDau { get; set; }
 		public DateTime NgayKetThuc { get; set; }
 		public List<DonViShort> DonViThamGia { get; set; }
@@ -20,7 +20,7 @@ namespace SSR.WebAPI.Models
 	public class KyBaoCaoShort
 	{ 
 		public string Id { get; set; }
-		public string Ten { get; set; }
+		public string Name { get; set; }
 		public DateTime NgayBatDau { get; set; }
 		public DateTime NgayKetThuc { get; set; }
 		public List<DonViShort> DonViThamGia { get; set; }

@@ -207,17 +207,13 @@ namespace SSR.WebAPI.Services
             if (!String.IsNullOrEmpty(param.Content))
             {
                 filter = builder.And(filter,
-                    builder.Where(x => x.Ten.Trim().ToLower().Contains(param.Content.Trim().ToLower())));
+                    builder.Where(x => x.Name.Trim().ToLower().Contains(param.Content.Trim().ToLower())));
             }
 
-            string sortBy = nameof(IIdEntity<string>.ThuTu);
+            
             result.TotalRows = await _collection.CountDocumentsAsync(filter);
             result.Data = await _collection.Find(filter)
-                .Sort(param.SortDesc
-                    ? Builders<TEntity>
-                        .Sort.Descending(sortBy)
-                    : Builders<TEntity>
-                        .Sort.Ascending(sortBy))
+               
                 .Skip(param.Skip)
                 .Limit(param.Limit)
                 .ToListAsync();

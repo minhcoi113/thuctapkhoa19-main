@@ -43,7 +43,7 @@ public class DataContext
     private readonly IMongoCollection<Value> _value;
     private readonly IMongoCollection<DonVi> _donVi;
     private readonly IMongoCollection<TrangThai> _trangThai;
-    private readonly IMongoCollection<CoQuan> _coQuan;
+   // private readonly IMongoCollection<CoQuan> _coQuan;
     private readonly IMongoCollection<Phanloai> _label;
     private readonly IMongoCollection<Knowledge> _knowledge;
 
@@ -92,7 +92,7 @@ public class DataContext
         _value = _context.GetCollection<Value>(_settings.ValueCollectionName);
         _donVi = _context.GetCollection<DonVi>(_settings.DonViCollectionName);
         _trangThai = _context.GetCollection<TrangThai>(_settings.TrangThaiCollectionName);
-        _coQuan = _context.GetCollection<CoQuan>("CoQuan");
+        //_coQuan = _context.GetCollection<CoQuan>("CoQuan");
         _label = _context.GetCollection<Phanloai>("Label");
         _knowledge = _context.GetCollection<Knowledge>("Knowledge");
     }
@@ -142,7 +142,7 @@ public class DataContext
     public IMongoCollection<Value> Value { get => _value; }
     public IMongoCollection<DonVi> DonVi { get => _donVi; }
     public IMongoCollection<TrangThai> TrangThai { get => _trangThai; }
-    public IMongoCollection<CoQuan> CoQuan { get => _coQuan; }
+    //public IMongoCollection<CoQuan> CoQuan { get => _coQuan; }
     public IMongoCollection<Phanloai> Label { get => _label; }
     public IMongoCollection<Knowledge> Knowledge { get => _knowledge; }
 }

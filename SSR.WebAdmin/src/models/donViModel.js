@@ -3,9 +3,9 @@ const toJson = (item) => {
     return {
         id : item.id,
         maDonVi : item.maDonVi,
-        ten : item.ten ,
+        name : item.name ,
         thuTu : item.thuTu,
-        donViCha : item.donViCha,
+        parentId : item.parentId,
         capDV : item.capDV,
     }
 }
@@ -13,9 +13,9 @@ const fromJson = (item) => {
     return {
         id : item.id,
         maDonVi : item.maDonVi,
-        ten : item.ten ,
+        name : item.name ,
         thuTu : item.thuTu,
-        donViCha : item.donViCha,
+        parentId : item.parentId,
         capDV : item.capDV,
     }
 }
@@ -24,9 +24,9 @@ const baseJson = () => {
     return {
         id : null,
         maDonVi : null,
-        ten : null,
+        name : null,
         thuTu : 0,
-        donViCha : null,
+        parentId : null,
         capDV : null,
     }
 }

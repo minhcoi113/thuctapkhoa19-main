@@ -9,7 +9,7 @@ namespace SSR.WebAPI.Models
         string CreatedBy { get; set; }
         string ModifiedBy { get; set; }
         bool IsDeleted { get; set; }
-        string Ten { get; set; }
-        int ThuTu { get; set; }
+        string Name { get; set; }
+        
     }
 }

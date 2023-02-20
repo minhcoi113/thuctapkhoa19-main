@@ -42,11 +42,11 @@ public static class MethodExtensions
     {
         var listDonVi = entities;
 
-        var parents = listDonVi.Where(x => x.DonViCha == null).ToList();
+        var parents = listDonVi.Where(x => x.ParentId == null).ToList();
         var list = new List<TreeVM>();
         foreach (var item in parents)
         {
-            var donVi = new TreeVM() { Id = item.Id, Label = item.Ten, Opened = true};
+            var donVi = new TreeVM() { Id = item.Id, Label = item.Name, Opened = true};
             list.Add(donVi);
             GetLoopItem(ref list, listDonVi, donVi);
         }
@@ -57,13 +57,13 @@ public static class MethodExtensions
     {
         try
         {
-            var entities = items.FindAll((item) => item.DonViCha == target.Id).ToList();
+            var entities = items.FindAll((item) => item.ParentId == target.Id).ToList();
             if (entities.Count > 0)
             {
                 target.Children = new List<TreeVM>();
                 foreach (var item in entities)
                 {
-                    var itemDV = new TreeVM() { Id = item.Id, Label = item.Ten };
+                    var itemDV = new TreeVM() { Id = item.Id, Label = item.Name };
                     target.Children.Add(itemDV);
                     GetLoopItem(ref list, items, itemDV);
                 }
@@ -98,6 +98,6 @@ public class TreeVM : ITreeVM<TreeVM> {
 public interface IEntity<Entity>
 { 
     string Id { get; set; }
-    string Ten { get; set; }
-    string DonViCha { get; set; }
+    string Name { get; set; }
+    string ParentId { get; set; }
 }

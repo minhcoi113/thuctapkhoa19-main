@@ -9,7 +9,7 @@ namespace SSR.WebAPI.Models
         [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
         public string Id { get; set; }
 		public string Code { get; set; }
-		public string Ten { get; set; }
+		public string Name { get; set; }
 		/// <summary>
 		/// 1. Tính phần trăm : double
 		/// 2. Float

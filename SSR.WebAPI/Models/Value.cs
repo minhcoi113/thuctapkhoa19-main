@@ -22,7 +22,7 @@ namespace SSR.WebAPI.Models
 		public string KyBaoCaoValueId { get; set; }
 		public int ThuTu { get; set; }
 		[BsonIgnore]
-        public string Ten { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public string Name { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
     }
 }
 
