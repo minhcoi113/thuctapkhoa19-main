@@ -11,6 +11,7 @@ public class DbSettings : IDbSettings
     public string MenuCollectionName { get; set; }
     public string FileCollectionName { get; set; }
     public string RefreshTokenCollectionName { get; set; }
+    public string GroupCollectionName { get; set; }
 
     /// <summary>
     /// 
@@ -73,4 +74,5 @@ public interface IDbSettings
     string ValueCollectionName { get; set; }
     string DonViCollectionName { get; set; }
     string TrangThaiCollectionName { get; set; }
+    string GroupCollectionName { get; set; }
 }

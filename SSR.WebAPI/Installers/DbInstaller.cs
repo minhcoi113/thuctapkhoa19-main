@@ -18,7 +18,7 @@ public class DbInstaller : IInstaller
         services.AddScoped<IModuleService, ModuleService>();
         services.AddScoped<IRoleService, RoleService>();
         services.AddScoped<ILoggingService, LoggingService>();
-
+        services.AddScoped<IGroupService, GroupService>();
         services.AddScoped<IPostService, PostService>();
         services.AddScoped<ICategoryService, CategoryService>();
         services.AddScoped<ITagService, TagService>();
