@@ -106,7 +106,7 @@ public class DataContext
         get { return _mongoClient; }
     }
     public IMongoCollection<User> Users { get => _users; }
-    public IMongoCollection<Role> Roles { get => _roles; }
+    public IMongoCollection<Role> Role { get => _roles; }
     public IMongoCollection<Menu> Menu { get => _menu; }
     public IMongoCollection<File> Files { get => _file; }
     public IMongoCollection<Module> Modules { get => _module; }

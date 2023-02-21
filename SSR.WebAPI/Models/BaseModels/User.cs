@@ -1,5 +1,7 @@
 using SSR.WebAPI.ViewModels;
 using MongoDB.Bson.Serialization.Attributes;
+using SSR.WebAPI.Models;
+using SSR.WebAPI.ViewModels;
 
 namespace SSR.WebAPI.Models;
 public class User : Audit, TEntity<string>
@@ -17,10 +19,8 @@ public class User : Audit, TEntity<string>
     public string PhoneNumber { get; set; }
     public string Email { get; set; }
     public string Note { get; set; }
-    public Avatar Avatar { get; set; }
-    public ChucVuShort ChucVu { get; set; }
-    public List<Role> Roles { get; set; }
-
+    public List<Avatar> Avatar { get; set; }
+    public List<Role> Role { get; set; }
     [BsonIgnore] public string Password { get; set; }
     [BsonIgnore] public List<string> Permissions { get; set; }
     [BsonIgnore] public List<NavMenuVM> Menu { get; set; }
