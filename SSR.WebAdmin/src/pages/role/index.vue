@@ -53,24 +53,18 @@ export default {
           thStyle: {width: '80px', minWidth: '60px' },
           tdClass: 'align-middle',
           thClass: 'hidden-sortable'},
+        
         {
-          key: "code",
-          label: "Mã quyền",
-          class: "text-center",
-          thStyle: {width: '150px', minWidth: '150px'},
-          thClass: 'hidden-sortable'
-        },
-        {
-          key: "ten",
+          key: "name",
           label: "Tên quyền",
           sortable: true,
-          thStyle:"text-align:center",
+          thStyle: {width: '300px', minWidth: '150px'},
         },
         {
           key: "permissions",
           label: "Số lượng",
           class : "text-center",
-          thStyle: {width: '150px', minWidth: '150px'},
+          tdClass: 'align-middle',
           thClass: 'hidden-sortable'
         },
         {
@@ -89,7 +83,7 @@ export default {
   },
   validations: {
     model: {
-      ten: {required},
+      name: {required},
       code: {required}
     },
   },
@@ -256,17 +250,7 @@ export default {
                 <div class="col-12">
                   <div class="d-flex justify-content-between align-items-end flex-wrap mb-2">
                     <!-- Nội dung -->
-                    <div class="flex-grow-1 me-2">
-                      <label>Mã quyền</label>
-                      <input
-                          size="sm"
-                          type="text"
-                          name="untyped-input"
-                          class="form-control"
-                          v-model="itemFilter.code"
-                          placeholder="Nhập mã quyền.."
-                      />
-                    </div>
+                    
                     <!-- Nội dung -->
                     <div class="flex-grow-1 me-2">
                       <label>Tên quyền</label>
@@ -340,37 +324,14 @@ export default {
                     <form @submit.prevent="handleSubmit"
                           ref="formContainer">
                       <div class="row">
-                        <div class="col-12">
-                          <div class="mb-3">
-                            <label class="text-left">Mã quyền</label>
-                            <span style="color: red">&nbsp;*</span>
-                            <input type="hidden" v-model="model.id"/>
-                            <input
-                                id="ten"
-                                v-model.trim="model.code"
-                                type="number"
-                                class="form-control"
-                                placeholder="Nhập mã quyền"
-                                :class="{
-                                'is-invalid':
-                                  submitted && $v.model.code.$error,
-                              }"
-                            />
-                            <div
-                                v-if="submitted && !$v.model.code.required"
-                                class="invalid-feedback"
-                            >
-                              Mã quyền  không được để trống.
-                            </div>
-                          </div>
-                        </div>
+                        
                         <div class="col-12">
                           <div class="mb-3">
                             <label class="text-left">Tên quyền</label>
                             <span style="color: red">&nbsp;*</span>
                             <input type="hidden" v-model="model.id"/>
                             <input
-                                v-model="model.ten"
+                                v-model="model.name"
                                 type="text"
                                 min="0"
                                 oninput="validity.valid||(value='');"
@@ -378,31 +339,18 @@ export default {
                                 placeholder="Nhập tên quyền"
                                 :class="{
                                 'is-invalid':
-                                  submitted && $v.model.ten.$error,
+                                  submitted && $v.model.name.$error,
                               }"
                             />
                             <div
-                                v-if="submitted && !$v.model.ten.required"
+                                v-if="submitted && !$v.model.name.required"
                                 class="invalid-feedback"
                             >
                               Tên quyền không được để trống.
                             </div>
                           </div>
                         </div>
-                        <div class="col-12">
-                          <div class="mb-3">
-                            <label class="text-left">Thứ tự</label>
-                            <input type="hidden" v-model="model.thuTu"/>
-                            <input
-                                v-model="model.thuTu"
-                                type="text"
-                                min="0"
-                                oninput="validity.valid||(value='');"
-                                class="form-control"
-                                placeholder="Nhập thứ tự"
-                            />
-                          </div>
-                        </div>
+                        
                       </div>
                       <div class="text-end pt-2 mt-3">
                         <b-button variant="light" @click="showModal = false">
@@ -427,76 +375,19 @@ export default {
                     <form @submit.prevent="handleSubmit"
                           ref="formContainer">
                       <div class="row">
-                        <div class="col-12">
-                          <div class="mb-3">
-                            <label class="text-left">Mã quyền : </label>
-                            <input
-                                v-model="model.code"
-                                type="text"
-                                class="form-control"
-                            />
-                          </div>
-                        </div>
+                        
                         <div class="col-12">
                           <div class="mb-3">
                             <label class="text-left">Tên quyền : </label>
                             <input
-                                v-model="model.ten"
+                                v-model="model.name"
                                 type="text"
                                 class="form-control"
                             />
                           </div>
                         </div>
-                        <div class="col-12">
-                          <div class="mb-3">
-                            <label class="text-left">Thứ tự : </label>
-                            <input
-                                v-model="model.thuTu"
-                                type="text"
-                                class="form-control"
-                            />
-                          </div>
-                        </div>
-                        <div class="col-12">
-                          <div class="mb-3">
-                            <label class="text-left">Người tạo : </label>
-                            <input
-                                v-model="model.createdBy"
-                                type="text"
-                                class="form-control"
-                            />
-                          </div>
-                        </div>
-                        <div class="col-12">
-                          <div class="mb-3">
-                            <label class="text-left">Ngày tạo: </label>
-                            <input
-                                v-model="model.createdAt"
-                                type="text"
-                                class="form-control"
-                            />
-                          </div>
-                        </div>
-                        <div class="col-12">
-                          <div class="mb-3">
-                            <label class="text-left">Người cập nhật : </label>
-                            <input
-                                v-model="model.modifiedBy"
-                                type="text"
-                                class="form-control"
-                            />
-                          </div>
-                        </div>
-                        <div class="col-12">
-                          <div class="mb-3">
-                            <label class="text-left">Ngày cập nhật : </label>
-                            <input
-                                v-model="model.modifiedAt"
-                                type="text"
-                                class="form-control"
-                            />
-                          </div>
-                        </div>
+                        
+                       
                       </div>
                       <div class="text-end pt-2 mt-3">
                         <b-button variant="light" @click="showDetail = false">
@@ -587,9 +478,14 @@ export default {
                         <i class="fas fa-trash-alt"></i>
                       </button>
                     </template>
-                    <template v-slot:cell(ten)="data">&nbsp;&nbsp;
-                      {{data.item.ten}}
+                    <template v-slot:cell(name)="data">&nbsp;&nbsp;
+                      {{data.item.name}}
                     </template>
+                    <!-- <template v-slot:cell(permissions)="data">
+                      <div v-for="(value , index) in data.item.permissions" :key="index">
+                        <span  class="badge bg-success ms-1"> {{value.name}}</span>
+                      </div>
+                    </template> -->
                   </b-table>
                 </div>
                 <div class="row">

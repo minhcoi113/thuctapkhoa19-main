@@ -2,27 +2,16 @@ import moment from 'moment';
 const toJson = (item) => {
     return {
         id: item.id,
-        code: item.code,
-        ten: item.ten,
-        thuTu: item.thuTu,
-        menus: item.menus,
-       createdAt: item.createdAt,
-       modifiedAt: item.modifiedAt,
-        createdBy: item.createdBy,
-        modifiedBy: item.modifiedBy,
+        name: item.name,
     }
 }
 
 const fromJson = (item) => {
     return {
         id: item.id,
-        code: item.code,
-        ten: item.ten,
-        thuTu: item.thuTu,
-        createdAt: item.createdAt,
-        modifiedAt: item.modifiedAt,
-        createdBy: item.createdBy,
-        modifiedBy: item.modifiedBy,
+       
+        name: item.name,
+      
         isDeleted: item.isDeleted
     }
 }
@@ -30,15 +19,11 @@ const fromJson = (item) => {
 const baseJson = () => {
     return {
         id: null,
-        code: null,
-        ten: null,
-        thuTu: 0,
-        menus: null,
+      
+        name: null,
+       
         permissions: null,
-        createdAt: null,
-        modifiedAt: null,
-        createdBy: null,
-        modifiedBy: null,
+       
         isDeleted: false
     }
 }

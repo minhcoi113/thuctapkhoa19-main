@@ -50,16 +50,9 @@ export default {
           sortable: true,
         },
         {
-          key: "chucVu",
-          label: " Chức vụ",
-          class: 'td-xuly',
-          sortable: true,
-          thStyle: {width: '80px', minWidth: '80px'},
-        },
-        {
-          key: "roles",
+          key: "role",
           label: "Quyền",
-          class: 'td-xuly',
+          class: 'td-ten',
           sortable: true,
           thStyle: {width: '80px', minWidth: '80px'},
         },
@@ -100,8 +93,8 @@ export default {
       userName: {required},
       firstName: {required},
       lastName: {required},
-      roles : {required},
-      chucVu : {required},
+      role : {required},
+      
     },
   },
   methods: {
@@ -122,11 +115,7 @@ export default {
         this.listRole = res.data || [];
       })
     },
-    async getListChucVu(){
-      await  this.$store.dispatch("chucVuStore/getAll").then((res) =>{
-        this.listChucVu = res.data || [];
-      })
-    },
+   
     async getListCoQuan(){
       await  this.$store.dispatch("donViStore/getTree").then((res) =>{
         this.listCoQuan = res.data || [];
@@ -260,7 +249,7 @@ export default {
     },
   },
   created(){
-    this.getListChucVu();
+  
     this.getListRole();
     this.getListCoQuan();
   },
@@ -532,51 +521,29 @@ export default {
                           <div class="mb-3">
                             <label class="text-left">Vai trò</label>
                             <span style="color: red">&nbsp;*</span>
-                            <multiselect v-model="model.roles"
+                            <multiselect v-model="model.role"
                                          :options="listRole"
-                                         label="ten"
+                                         label="name"
                                          :multiple="true"
                                          selectLabel="Nhấn vào để chọn"
                                          deselectLabel="Nhấn vào để xóa"
                                          track-by="id"
+                                         
                                          :class="{
                                 'is-invalid':
-                                  submitted && $v.model.roles.$error,
+                                  submitted && $v.model.role.$error,
                               }"
                                          placeholder="Chọn vai trò"
                                          ></multiselect>
                             <div
-                                v-if="submitted && !$v.model.roles.required"
+                                v-if="submitted && !$v.model.role.required"
                                 class="invalid-feedback"
                             >
                               Vai trò không được trống.
                             </div>
                           </div>
                         </div>
-                        <div class="col-6">
-                          <div class="mb-3">
-                            <label class="text-left"> Chức vụ</label>
-                            <span style="color: red">&nbsp;*</span>
-                            <multiselect v-model="model.chucVu"
-                                         :options="listChucVu"
-                                         label="ten"
-                                         selectLabel="Nhấn vào để chọn"
-                                         deselectLabel="Nhấn vào để xóa"
-                                         track-by="id"
-                                         :class="{
-                                'is-invalid':
-                                  submitted && $v.model.chucVu.$error,
-                              }"
-                                         placeholder="Chọn vai trò"
-                            ></multiselect>
-                            <div
-                                v-if="submitted && !$v.model.chucVu.required"
-                                class="invalid-feedback"
-                            >
-                              Vai trò không được trống.
-                            </div>
-                          </div>
-                        </div>
+                        
                       </div>
                       <div class="text-end pt-2">
                         <b-button variant="light" class="w-md" @click="showModal = false">
@@ -626,19 +593,14 @@ export default {
                     <template v-slot:cell(STT)="data">
                       {{ data.index + ((currentPage-1)*perPage) + 1  }}
                     </template>
-                    <template v-slot:cell(roles)="row">
+                    <template v-slot:cell(role)="row">
                       <div v-for="(item,index) in row.value" :key="index">
                               <span>
-                                {{item.ten}}
+                                {{item.name}}
                               </span>
                       </div>
                     </template>
-                    <template v-slot:cell(chucVu)="data">
-                      <div v-if="data.item.chucVu">
-                       <p class="text-white">{{ data.item.chucVu.ten }}</p>
-                      </div>
-
-                    </template>
+                    
                     <template v-slot:cell(donVi)="data">
                       <div v-if="data.item.donVi">
                         <p class="text-white">{{ data.item.donVi.ten }}</p>
