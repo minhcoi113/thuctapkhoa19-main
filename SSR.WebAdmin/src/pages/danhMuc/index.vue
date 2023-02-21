@@ -425,7 +425,7 @@ export default {
                     <template v-slot:cell(name)="data">
                       <template v-if="data.item.name">
                         <div >
-                        <span class="colorstyle" v-bind:style="{ background: data.item.color}">{{data.item.name}}</span>
+                        <span v-bind:style="{ background: data.item.color}">{{data.item.name}}</span>
                       </div>
                       </template>
                     </template>
