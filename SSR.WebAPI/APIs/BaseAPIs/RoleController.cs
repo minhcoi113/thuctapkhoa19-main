@@ -10,16 +10,16 @@ namespace SSR.WebAPI.APIs.Identity
 {
     [Route("api/v1/[controller]")]
     // [Authorize]
-    public class RolesController : ControllerBase
+    public class RoleController : ControllerBase
     {
         private readonly IRoleService _roleService;
 
-        public RolesController(IRoleService roleService)
+        public RoleController(IRoleService roleService)
         {
             _roleService = roleService;
         }
-        
-          [HttpPost]
+
+        [HttpPost]
         [Route("create")]
         public async Task<IActionResult> Create([FromBody] Role model)
         {

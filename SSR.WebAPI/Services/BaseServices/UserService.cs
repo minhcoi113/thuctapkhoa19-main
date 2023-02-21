@@ -54,11 +54,13 @@ namespace SSR.WebAPI.Services
             filter = builder.And(filter, builder.Where(x => x.IsDeleted == false));
             if (!String.IsNullOrEmpty(param.Content))
             {
+
                 // filter = builder.And(filter,
                 //     builder.Where(x => x.FullName.Trim().ToLower().Contains(param.Content.Trim().ToLower())));
                 filter = builder.And(filter,
                     builder.Where(x => x.UserName.Trim().ToLower().Contains(param.Content.Trim().ToLower()
                         ) || x.FullName.Trim().ToLower().Contains(param.Content.Trim().ToLower())
+
                           || x.Email.Trim().ToLower().Contains(param.Content.Trim().ToLower())
                     ));
             }
@@ -67,7 +69,7 @@ namespace SSR.WebAPI.Services
             result.TotalRows = await _context.Users.CountDocumentsAsync(filter);
             result.Data = await _context.Users.Find(filter)
                 .Sort(param.SortDesc
-                ?Builders<User>
+                ? Builders<User>
                     .Sort.Ascending(sortBy)
                 : Builders<User>
                         .Sort.Descending(sortBy)
@@ -77,7 +79,7 @@ namespace SSR.WebAPI.Services
                 .ToListAsync();
             return result;
         }
-        
+
         public async Task<User> GetByUserName(string userName)
         {
             return await _context.Users.Find(x => x.UserName == userName && x.IsDeleted != true).FirstOrDefaultAsync();
@@ -106,12 +108,7 @@ namespace SSR.WebAPI.Services
                 PhoneNumber = model.PhoneNumber,
                 Email = model.Email,
                 Note = model.Note,
-                Roles = model.Roles,
-                ChucVu = model.ChucVu,
-                CreatedBy = CurrentUserName,
-                ModifiedBy = CurrentUserName,
-                CreatedAt = DateTime.Now,
-                ModifiedAt = DateTime.Now
+
             };
 
             byte[] passwordHash, passwordSalt;
@@ -159,11 +156,11 @@ namespace SSR.WebAPI.Services
             entity.FullName = model.LastName + " " + model.FirstName;
             entity.PhoneNumber = model.PhoneNumber;
             entity.Email = model.Email;
-            entity.ChucVu = model.ChucVu;
+
             entity.Note = model.Note;
-            entity.Roles = model.Roles;
+            entity.Role = model.Role;
             entity.ModifiedAt = DateTime.Now;
-            
+
             if (!string.IsNullOrEmpty(model.Password))
             {
                 byte[] passwordHash, passwordSalt;

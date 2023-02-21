@@ -31,7 +31,7 @@ namespace SSR.WebAPI.Services
             base(context, contextAccessor)
         {
             _context = context;
-            BaseMongoDb = new BaseMongoDb<Role, string>(_context.Roles);
+            BaseMongoDb = new BaseMongoDb<Role, string>(_context.Role);
             _settings = settings;
             // _logger = logger.WithCollectionName(_settings.RoleCollectionName)
             //     .WithDatabaseName(_settings.DatabaseName)
@@ -46,7 +46,7 @@ namespace SSR.WebAPI.Services
             if (model == default)
                 throw new ResponseMessageException().WithCode(EResultResponse.FAIL.ToString())
                     .WithMessage(DefaultMessage.DATA_NOT_EMPTY);
-            var checkName = _context.Roles.Find(x => x.Ten == model.Ten && x.IsDeleted != true).FirstOrDefault();
+            var checkName = _context.Role.Find(x => x.Name == model.Name && x.IsDeleted != true).FirstOrDefault();
 
             if (checkName != default)
                 throw new ResponseMessageException().WithCode(EResultResponse.FAIL.ToString())
@@ -54,19 +54,13 @@ namespace SSR.WebAPI.Services
 
             var entity = new Role
             {
-                Ten = model.Ten,
-                Code = model.Code,
-                ThuTu = model.ThuTu,
-                CreatedBy = CurrentUserName,
-                ModifiedBy = CurrentUserName,
-                CreatedAt = DateTime.Now,
-                ModifiedAt = DateTime.Now
+                Name = model.Name,
                 // ModifiedBy = CurrentUser.Id,
                 // CreatedBy = CurrentUser.Id
             };
 
             var result = await BaseMongoDb.CreateAsync(entity);
-            
+
             if (result.Entity.Id == default || !result.Success)
                 throw new ResponseMessageException().WithCode(EResultResponse.FAIL.ToString())
                     .WithMessage(DefaultMessage.CREATE_FAILURE);
@@ -81,23 +75,21 @@ namespace SSR.WebAPI.Services
             if (model == default)
                 throw new ResponseMessageException().WithCode(EResultResponse.FAIL.ToString())
                     .WithMessage(DefaultMessage.DATA_NOT_EMPTY);
-            var entity = _context.Roles.Find(x => x.Id == model.Id).FirstOrDefault();
+            var entity = _context.Role.Find(x => x.Id == model.Id).FirstOrDefault();
             if (entity == default)
                 throw new ResponseMessageException().WithCode(EResultResponse.FAIL.ToString())
                     .WithMessage(DefaultMessage.DATA_NOT_FOUND);
 
-            var checkName = _context.Roles.Find(x => x.Id != model.Id && x.Ten == model.Ten && x.IsDeleted != true)
+            var checkName = _context.Role.Find(x => x.Id != model.Id && x.Name == model.Name && x.IsDeleted != true)
                 .FirstOrDefault();
 
             if (checkName != default)
                 throw new ResponseMessageException().WithCode(EResultResponse.FAIL.ToString())
                     .WithMessage(DefaultMessage.NAME_EXISTED);
 
-            entity.Ten = model.Ten;
-            entity.Code = model.Code;
+            entity.Name = model.Name;
+
             entity.Permissions = model.Permissions;
-            entity.ModifiedBy = CurrentUserName;
-            entity.ModifiedAt = DateTime.Now;
             var result = await BaseMongoDb.UpdateAsync(entity);
             if (!result.Success)
                 throw new ResponseMessageException().WithCode(EResultResponse.FAIL.ToString())
@@ -111,18 +103,18 @@ namespace SSR.WebAPI.Services
         private async Task UpdateRolesInUser(Role role)
         {
             var filter = Builders<User>.Filter
-                .ElemMatch(z => z.Roles, a => a.Id == role.Id);
+                .ElemMatch(z => z.Role, a => a.Id == role.Id);
             var userUseRole = await _context.Users.Find(filter).ToListAsync();
             if (userUseRole != default)
             {
                 foreach (var item in userUseRole)
                 {
-                    var index = item.Roles.FindIndex(x => x.Id == role.Id);
+                    var index = item.Role.FindIndex(x => x.Id == role.Id);
                     if (index != -1)
                     {
                         var filterUser = Builders<User>.Filter.Eq(x => x.Id, item.Id);
                         var update = Builders<User>.Update
-                            .Set(s => s.Roles[index], role)
+                            .Set(s => s.Role[index], role)
                             .Set(s => s.ModifiedAt, DateTime.Now);
 
                         UpdateResult actionResult
@@ -137,7 +129,7 @@ namespace SSR.WebAPI.Services
             if (id == default)
                 throw new ResponseMessageException().WithCode(EResultResponse.FAIL.ToString())
                     .WithMessage(DefaultMessage.DATA_NOT_EMPTY);
-            var entity = _context.Roles.Find(x => x.Id == id && x.IsDeleted != true).FirstOrDefault();
+            var entity = _context.Role.Find(x => x.Id == id && x.IsDeleted != true).FirstOrDefault();
             if (entity == default)
                 throw new ResponseMessageException().WithCode(EResultResponse.FAIL.ToString())
                     .WithMessage(DefaultMessage.DATA_NOT_FOUND);
@@ -154,12 +146,12 @@ namespace SSR.WebAPI.Services
 
         public async Task<IEnumerable<Role>> Get()
         {
-            return await _context.Roles.Find(x => x.IsDeleted != true).ToListAsync();
+            return await _context.Role.Find(x => x.IsDeleted != true).ToListAsync();
         }
 
         public async Task<Role> GetById(string id)
         {
-            return await _context.Roles.Find(x => x.Id == id && x.IsDeleted != true).FirstOrDefaultAsync();
+            return await _context.Role.Find(x => x.Id == id && x.IsDeleted != true).FirstOrDefaultAsync();
         }
 
         public async Task<PagingModel<Role>> GetPaging(PagingParam param)
@@ -171,17 +163,13 @@ namespace SSR.WebAPI.Services
             if (!String.IsNullOrEmpty(param.Content))
             {
                 filter = builder.And(filter,
-                    builder.Where(x => x.Ten.Trim().ToLower().Contains(param.Content.Trim().ToLower())));
+                    builder.Where(x => x.Name.Trim().ToLower().Contains(param.Content.Trim().ToLower())));
             }
 
-            string sortBy = "ThuTu";
-            result.TotalRows = await _context.Roles.CountDocumentsAsync(filter);
-            result.Data = await _context.Roles.Find(filter)
-                .Sort(param.SortDesc
-                ? Builders<Role>
-                .Sort.Ascending(sortBy)    
-                : Builders<Role>
-                        .Sort.Descending(sortBy))
+
+            result.TotalRows = await _context.Role.CountDocumentsAsync(filter);
+            result.Data = await _context.Role.Find(filter)
+
                 .Skip(param.Skip)
                 .Limit(param.Limit)
                 .ToListAsync();
@@ -194,7 +182,7 @@ namespace SSR.WebAPI.Services
             var user = _context.Users.Find(x => x.UserName == userName).FirstOrDefault();
             if (user != default)
             {
-                var permissionsView = user.Roles.SkipWhile(x => x.Permissions == null)
+                var permissionsView = user.Role.SkipWhile(x => x.Permissions == null)
                     .SelectMany(x => x.Permissions)?
                     .Where(x => x.Action != null && x.Action.Contains("viewpage"))
                     .Select(p => p.Action)
@@ -222,9 +210,9 @@ namespace SSR.WebAPI.Services
                 return new List<string>();
             else
             {
-                if (currentUser.Roles == null)
+                if (currentUser.Role == null)
                     return new List<string>();
-                var permissions = currentUser.Roles
+                var permissions = currentUser.Role
                     .SkipWhile(x => x.Permissions == null)
                     .SelectMany(x => x.Permissions)
                     .Select(x => x.Action)

@@ -139,7 +139,7 @@ namespace SSR.WebAPI.APIs.Identity
                 );
             }
         }
-        
+
         [HttpPost]
         [Route("get-paging-params")]
         public async Task<IActionResult> GetPagingParam([FromBody] PagingParam param)
@@ -191,7 +191,7 @@ namespace SSR.WebAPI.APIs.Identity
                 throw ex;
             }
         }
-        
+
         [HttpPost]
         [Route("change-password")]
         public async Task<IActionResult> ChangePassword([FromBody] UserVM model)
@@ -213,7 +213,8 @@ namespace SSR.WebAPI.APIs.Identity
                     new ResultMessageResponse().WithCode(ex.ResultCode)
                         .WithMessage(ex.ResultString)
                 );
-            }        catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 throw ex;
             }
