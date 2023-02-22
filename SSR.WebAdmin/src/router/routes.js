@@ -146,13 +146,13 @@ export default [{
     },
     {
         path: "/loai-danh-muc",
-        name: "Loại danh mục",
+        name: "Nhãn",
         // meta: {},
         component: () => import("../pages/loaiDanhMuc"),
     },
     {
-        path: "/danh-muc",
-        name: "Danh mục",
+        path: "/huong-dan-xu-ly",
+        name: "Hướng dẫn xử lý",
         // meta: {},
         component: () => import("../pages/danhMuc"),
     },
@@ -224,8 +224,8 @@ export default [{
         component: () => import("../pages/post/postRecruitment"),
     },
     {
-        path: "/mau-bao-cao",
-        name: "mau-bao-cao",
+        path: "/phan-loai-nhan-du-an",
+        name: "phan-loai-nhan-du-an",
         // meta: {},
         component: () => import("../pages/mauBaoCao"),
     },

@@ -69,7 +69,7 @@ namespace SSR.WebAPI.APIs.Identity
                     var result =
                         await _fileService.SaveFileAsync(filePath, fileName, newFileName, extFile, file.Length);
                     return Ok(
-                        new { url = "https://apiSSR.anhdev99.com/api/v1/files/view/" + result.Id }
+                        new { url = "https://localhost:5001/api/v1/files/view/" + result.Id }
                     );
                 }
 

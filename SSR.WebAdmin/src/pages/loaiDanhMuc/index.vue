@@ -9,13 +9,14 @@ import { categoryModel } from "@/models/categoryModel";
 import { loaiDanhMucModel } from "@/models/loaiDanhMucModel";
 import { knowledgeModel } from "@/models/knowledgeModel";
 import Multiselect from "vue-multiselect";
+import Switches from "vue-switches";
 
 export default {
   page: {
-    title: "Loại danh mục",
+    title: "Nhãn",
     meta: [{ name: "description", content: appConfig.description }],
   },
-  components: { Layout, Multiselect },
+  components: { Layout, Multiselect, Switches},
   data() {
     return {
       title: "Loại danh mục",
@@ -83,6 +84,7 @@ export default {
       knowledge: { required },
       name: { required },
       color: { required },
+      isglobal: { required },
     },
   },
   created() {
@@ -303,7 +305,7 @@ export default {
                         </div>
                       </div>
                       <div class="row">
-                        <div class="col-8">
+                        <div class="col-12">
                           <label class="text-left">Chọn hướng dẫn</label>
                           <span style="color: red">&nbsp;*</span>
                           <multiselect v-model="model.knowledge" :options="listKnowledge" track-by="id" label="name"
@@ -313,7 +315,9 @@ export default {
                             :allow-empty="false" placeholder="Select one" label="name" track-by="name">
                           </multiselect>
                         </div>
-                        <div class="col-3">
+                      </div>
+                      <div class="row">
+                        <div class="col-6">
                           <div class="mb-3">
                             <label class="text-left">Chọn màu phân loại nhãn</label>
                             <span style="color: red">&nbsp;*</span>
@@ -327,6 +331,15 @@ export default {
                             <div v-if="submitted && !$v.model.color.required" class="invalid-feedback">
                               Màu không được để trống.
                             </div>
+                          </div>
+                        </div>
+                        <div class="col-6">
+                          <div class="mb-3">
+                            <label class="text-left">Dùng chung</label>
+                            <br />
+                            <switches class="mt-2 mb-0"  v-model="model.isglobal" type-bold="true" color="success"  value="true" >
+                            </switches>
+                            <v-switch label="on disabled" :value="true" disabled></v-switch>
                           </div>
                         </div>
                       </div>

@@ -1,26 +1,26 @@
 ﻿const toJson = (item) => {
     return {
         id : item.id,
+        name: item.name,
         content : item.content ,
         //loaiDanhMuc:item.loaiDanhMuc,
-        color:item.color
     }
 }
 const fromJson = (item) => {
     return {
         id : item.id,
+        name: item.name,
         content : item.content ,
         //loaiDanhMuc:item.loaiDanhMuc,
-        color:item.color
     }
 }
 
 const baseJson = () => {
     return {
         id : null,
+        name: null,
         content : null ,
         //loaiDanhMuc:null,
-        color: null
     }
 }
 

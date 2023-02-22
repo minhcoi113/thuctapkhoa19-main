@@ -134,16 +134,16 @@ namespace SSR.WebAPI.Services
                 filter = builder.And(filter,
                     builder.Where(x => x.Name.Trim().ToLower().Contains(param.Content.Trim().ToLower())));
             }
-            //string sortBy = nameof(Knowledge.ParentId);
+            string sortBy = nameof(Knowledge.Name);
             result.TotalRows = await _collection.CountDocumentsAsync(filter);
             result.Data = await _collection.Find(filter)
-                //.Sort(param.SortDesc
-                //    ? Builders<Knowledge>
-                //        .Sort.Descending(sortBy)
-                //    : Builders<Knowledge>
-                //        .Sort.Ascending(sortBy))
-                //.Skip(param.Skip)
-                //.Limit(param.Limit)
+                .Sort(param.SortDesc
+                    ? Builders<Knowledge>
+                        .Sort.Descending(sortBy)
+                    : Builders<Knowledge>
+                        .Sort.Ascending(sortBy))
+                .Skip(param.Skip)
+                .Limit(param.Limit)
                 .ToListAsync();
             return result;
         }

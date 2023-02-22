@@ -5,6 +5,7 @@ using SSR.WebAPI.Models;
 using SSR.WebAPI.Params;
 using Microsoft.AspNetCore.Mvc;
 using EResultResponse = SSR.WebAPI.Exceptions.EResultResponse;
+using SSR.WebAPI.Services;
 
 namespace SSR.WebAPI.APIs
 {

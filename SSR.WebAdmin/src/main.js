@@ -11,7 +11,8 @@ import store from '@/state/store'
 import vco from "v-click-outside"
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 import FunctionalCalendar from 'vue-functional-calendar';
-import CKEditor from '@ckeditor/ckeditor5-vue2';
+//import CKEditor from '@ckeditor/ckeditor5-vue2';
+import CKEditor from 'ckeditor4-vue'
 // Toast
 import Toast from "vue-toastification";
 import "vue-toastification/dist/index.css";
