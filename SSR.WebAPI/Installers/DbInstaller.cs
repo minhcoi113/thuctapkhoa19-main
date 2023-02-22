@@ -46,5 +46,6 @@ public class DbInstaller : IInstaller
         services.AddScoped<IProjectService,ProjectService>();
         services.AddScoped<IPhanloaiService, PhanloaiService>();
         services.AddScoped<IKnowledgeService, KnowledgeService>();
+        services.AddScoped<ILabelService, LabelService>();
     }
 }

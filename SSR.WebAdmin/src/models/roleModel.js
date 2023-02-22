@@ -11,7 +11,7 @@ const fromJson = (item) => {
         id: item.id,
        
         name: item.name,
-      
+        permissions: item.permissions,
         isDeleted: item.isDeleted
     }
 }

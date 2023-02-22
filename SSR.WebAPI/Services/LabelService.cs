@@ -10,22 +10,30 @@ using EResultResponse = SSR.WebAPI.Helpers.EResultResponse;
 
 namespace SSR.WebAPI.Services
 {
-    public class KnowledgeService: BaseService, IKnowledgeService
+    public class LabelService : BaseService, ILabelService
     {
         private DataContext _context;
-        private BaseMongoDb<Knowledge, string> BaseMongoDb;
-        private IMongoCollection<Knowledge> _collection;
+        private BaseMongoDb<Label, string> BaseMongoDb;
+        private IMongoCollection<Label> _collection;
 
-        public KnowledgeService(DataContext context,
+        public LabelService(DataContext context,
             IHttpContextAccessor contextAccessor)
             : base(context, contextAccessor)
         {
             _context = context;
-            BaseMongoDb = new BaseMongoDb<Knowledge, string>(_context.Knowledge);
-            _collection = context.Knowledge;
+            BaseMongoDb = new BaseMongoDb<Label, string>(_context.Nhan);
+            _collection = context.Nhan;
         }
 
-        public async Task<Knowledge> Create(Knowledge model)
+        public async Task<List<LabelTreeVM>> GetTree()
+        {
+            var nhans = await _context.Nhan.Find(x => x.IsDeleted != true).SortBy(donVi => donVi.ParentId).ToListAsync();
+            var data = MethodExtensions.GetTree<LabelTreeVM, Label>(nhans ?? new List<Label>());
+
+            return data;
+        }
+
+        public async Task<Label> Create(Label model)
         {
             if (model == default)
             {
@@ -33,10 +41,15 @@ namespace SSR.WebAPI.Services
                     .WithCode(EResultResponse.FAIL.ToString())
                     .WithMessage(DefaultMessage.DATA_NOT_EMPTY);
             }
-            var entity = new Knowledge
+
+            var entity = new Label
             {
                 Name = model.Name,
-                Content = model.Content,
+                Color = model.Color,
+                IsGlobal = model.IsGlobal,
+                Description = model.Description,
+                ParentId = model.ParentId,
+                Knowledge = model.Knowledge
             };
 
             var result = await BaseMongoDb.CreateAsync(entity);
@@ -50,7 +63,7 @@ namespace SSR.WebAPI.Services
             return entity;
         }
 
-        public async Task<Knowledge> Update(Knowledge model)
+        public async Task<Label> Update(Label model)
         {
             if (model == default)
             {
@@ -59,7 +72,7 @@ namespace SSR.WebAPI.Services
                     .WithMessage(DefaultMessage.DATA_NOT_EMPTY);
             }
 
-            var entity = _context.Knowledge.Find(x => x.Id == model.Id).FirstOrDefault();
+            var entity = _context.Nhan.Find(x => x.Id == model.Id).FirstOrDefault();
             if (entity == default)
             {
                 throw new ResponseMessageException()
@@ -68,7 +81,11 @@ namespace SSR.WebAPI.Services
             }
 
             entity.Name = model.Name;
-            entity.Content = model.Content;
+            entity.Color = model.Color;
+            entity.IsGlobal = model.IsGlobal;
+            entity.Description = model.Description;
+            entity.ParentId = model.ParentId;
+            entity.Knowledge = model.Knowledge;
 
             var result = await BaseMongoDb.UpdateAsync(entity);
             if (!result.Success)
@@ -91,7 +108,7 @@ namespace SSR.WebAPI.Services
             }
 
 
-            var entity = _context.Knowledge.Find(x => x.Id == id && x.IsDeleted != true).FirstOrDefault();
+            var entity = _context.Nhan.Find(x => x.Id == id && x.IsDeleted != true).FirstOrDefault();
             if (entity == default)
             {
                 throw new ResponseMessageException()
@@ -112,21 +129,21 @@ namespace SSR.WebAPI.Services
             }
         }
 
-        public async Task<List<Knowledge>> Get()
+        public async Task<List<Label>> Get()
         {
-            return await _context.Knowledge.Find(x => x.IsDeleted != true).ToListAsync();
+            return await _context.Nhan.Find(x => x.IsDeleted != true).ToListAsync();
         }
 
-        public async Task<Knowledge> GetById(string id)
+        public async Task<Label> GetById(string id)
         {
-            return await _context.Knowledge.Find(x => x.Id == id && x.IsDeleted != true)
+            return await _context.Nhan.Find(x => x.Id == id && x.IsDeleted != true)
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<PagingModel<Knowledge>> GetPaging(PagingParam param)
+        public async Task<PagingModel<Label>> GetPaging(PagingParam param)
         {
-            var result = new PagingModel<Knowledge>();
-            var builder = Builders<Knowledge>.Filter;
+            var result = new PagingModel<Label>();
+            var builder = Builders<Label>.Filter;
             var filter = builder.Empty;
             filter = builder.And(filter, builder.Where(x => x.IsDeleted == false));
             if (!String.IsNullOrEmpty(param.Content))
@@ -134,13 +151,13 @@ namespace SSR.WebAPI.Services
                 filter = builder.And(filter,
                     builder.Where(x => x.Name.Trim().ToLower().Contains(param.Content.Trim().ToLower())));
             }
-            string sortBy = nameof(Knowledge.Name);
+            string sortBy = nameof(Label.CreatedAt);
             result.TotalRows = await _collection.CountDocumentsAsync(filter);
             result.Data = await _collection.Find(filter)
                 .Sort(param.SortDesc
-                    ? Builders<Knowledge>
+                    ? Builders<Label>
                         .Sort.Descending(sortBy)
-                    : Builders<Knowledge>
+                    : Builders<Label>
                         .Sort.Ascending(sortBy))
                 .Skip(param.Skip)
                 .Limit(param.Limit)

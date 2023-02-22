@@ -10,6 +10,7 @@ namespace SSR.WebAPI.Models
         [BsonId]
         [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
         public string Id { get; set; }
+
         //public string CreatedBy { get; set; }
         public string Description { get; set;}
         public List<User> Members { get; set; }

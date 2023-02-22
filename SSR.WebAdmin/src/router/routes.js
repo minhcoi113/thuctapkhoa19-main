@@ -70,6 +70,14 @@ export default [{
         }
     },
     {
+        path: '/group',
+        name: 'Group',
+        component: () => import('../pages/group/group'),
+        meta: {
+            authRequired: true,
+        }
+    },
+    {
         path: "/nhom-quyen",
         name: "NhomQuyen",
         meta: {
@@ -145,14 +153,14 @@ export default [{
         component: () => import("../pages/chucVu"),
     },
     {
-        path: "/loai-danh-muc",
-        name: "Loại danh mục",
+        path: "/nhan",
+        name: "Nhãn",
         // meta: {},
-        component: () => import("../pages/loaiDanhMuc"),
+        component: () => import("../pages/label"),
     },
     {
-        path: "/danh-muc",
-        name: "Danh mục",
+        path: "/huong-dan-xu-ly",
+        name: "Hướng dẫn xử lý",
         // meta: {},
         component: () => import("../pages/danhMuc"),
     },
@@ -247,8 +255,8 @@ export default [{
         component: () => import("../pages/post/postRecruitment"),
     },
     {
-        path: "/mau-bao-cao",
-        name: "mau-bao-cao",
+        path: "/phan-loai-nhan-du-an",
+        name: "phan-loai-nhan-du-an",
         // meta: {},
         component: () => import("../pages/mauBaoCao"),
     },

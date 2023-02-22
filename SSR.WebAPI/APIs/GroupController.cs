@@ -5,6 +5,8 @@ using SSR.WebAPI.Models;
 
 using Microsoft.AspNetCore.Mvc;
 using EResultResponse = SSR.WebAPI.Exceptions.EResultResponse;
+using SSR.WebAPI.Params;
+using SSR.WebAPI.Services;
 
 namespace DTI.WebAPI.APIs;
 
@@ -20,6 +22,29 @@ public class GroupController : ControllerBase
         _service = service;
     }
 
+    [HttpPost]
+    [Route("get-paging-params")]
+    public async Task<IActionResult> GetPagingParam([FromBody] PagingParam param)
+    {
+        try
+        {
+            var data = await _service.GetPaging(param);
+
+            return Ok(
+                new ResultResponse<PagingModel<Group>>()
+                    .WithData(data)
+                    .WithCode(EResultResponse.SUCCESS.ToString())
+                    .WithMessage(DefaultMessage.GET_DATA_SUCCESS)
+            );
+        }
+        catch (ResponseMessageException ex)
+        {
+            return Ok(
+                new ResultMessageResponse().WithCode(ex.ResultCode)
+                    .WithMessage(ex.ResultString)
+            );
+        }
+    }
     [HttpPost]
     [Route("create")]
     public async Task<IActionResult> Create([FromBody] Group model)
@@ -139,5 +164,6 @@ public class GroupController : ControllerBase
         }
     }
 
- 
+   
+
 }

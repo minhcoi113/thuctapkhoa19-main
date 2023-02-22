@@ -33,6 +33,7 @@ namespace SSR.WebAPI.Services
                     .WithCode(EResultResponse.FAIL.ToString())
                     .WithMessage(DefaultMessage.DATA_NOT_EMPTY);
             }
+ 
             var entity = new Phanloai
             {
                 Name = model.Name,
@@ -142,7 +143,7 @@ namespace SSR.WebAPI.Services
                 filter = builder.And(filter,
                     builder.Where(x => x.Name.Trim().ToLower().Contains(param.Content.Trim().ToLower())));
             }
-            string sortBy = nameof(Phanloai.ParentId);
+            string sortBy = nameof(Phanloai.CreatedAt);
             result.TotalRows = await _collection.CountDocumentsAsync(filter);
             result.Data = await _collection.Find(filter)
                 .Sort(param.SortDesc

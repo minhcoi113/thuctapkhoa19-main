@@ -15,6 +15,7 @@ namespace SSR.WebAPI.Models;
         public string Description { get; set; }
         public bool IsGlobal { get; set; }
         public string ParentId { get; set; }
+        public string IdProject { get; set; }
         public List<Knowledge> Knowledge { get; set; }
     }
 

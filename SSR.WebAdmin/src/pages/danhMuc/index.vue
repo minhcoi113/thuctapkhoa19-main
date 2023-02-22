@@ -1,21 +1,47 @@
 ﻿<script>
 import Layout from "../../layouts/main";
-import {required} from "vuelidate/lib/validators";
+import { required } from "vuelidate/lib/validators";
 import appConfig from "@/app.config";
-import {notifyModel} from "@/models/notifyModel";
-import {pagingModel} from "@/models/pagingModel";
-import {CONSTANTS} from "@/helpers/constants";
-import {knowledgeModel} from "@/models/knowledgeModel";
-import Multiselect from "vue-multiselect";
+import { notifyModel } from "@/models/notifyModel";
+import { pagingModel } from "@/models/pagingModel";
+import { CONSTANTS } from "@/helpers/constants";
+import { knowledgeModel } from "@/models/knowledgeModel";
 
 export default {
   page: {
     title: "Danh mục",
-    meta: [{name: "description", content: appConfig.description}],
+    meta: [{ name: "description", content: appConfig.description }],
   },
-  components: {Layout},
+  components: { Layout, 'ckeditor-nuxt': () => { return import('@blowstack/ckeditor-nuxt')  },},
   data() {
     return {
+      editorConfig: {
+        toolbar: {
+          items: [
+            'heading', '|',
+            'fontfamily', 'fontsize', '|',
+            'uploadImage',
+            'code', 'codeBlock', '|',
+            'alignment', '|',
+            'fontColor', 'fontBackgroundColor', '|',
+            'bold', 'italic', 'strikethrough', 'underline', 'subscript', 'superscript', '|',
+            'link', '|',
+            'outdent', 'indent', '|',
+            'bulletedList', 'numberedList', 'todoList', '|',
+            'insertTable', '|',
+            'undo', 'redo'
+          ],
+          shouldNotGroupWhenFull: false
+        },
+        removePlugins: ['Title', 'ImageCaption'],
+        simpleUpload: {
+          uploadUrl: process.env.VUE_APP_API_URL + "files/upload-ckeditor",
+          headers: {
+            'Authorization': 'optional_token'
+          }
+        },
+      },
+
       title: "Danh mục",
       data: [],
       showModal: false,
@@ -25,36 +51,36 @@ export default {
       submitted: false,
       model: knowledgeModel.baseJson(),
       pagination: pagingModel.baseJson(),
-      totalRows: 1,
       todoTotalRows: 1,
       currentPage: 1,
       numberOfElement: 1,
       perPage: 10,
-      pageOptions: [5,10, 25, 50, 100],
+      pageOptions: [5, 10, 25, 50, 100],
       filter: null,
       filterOn: [],
       isBusy: false,
       sortBy: "age",
       sortDesc: false,
       fields: [
-        { key: 'STT',
+        {
+          key: 'STT',
           label: 'STT',
           class: 'cs-text-center',
           sortable: false,
           thClass: 'hidden-sortable',
-          thStyle: {width: '30px', minWidth: '30px'}
+          thStyle: { width: '30px', minWidth: '30px' }
         },
         {
           key: "name",
-          label: "Tên loại",
+          label: "Hướng dẫn",
           sortable: true,
         },
         {
-          key: "Content",
+          key: "content",
           label: "Content",
           class: 'td-xuly',
           sortable: true,
-          thStyle: {width: '80px', minWidth: '80px'},
+          thStyle: { width: '700px', minWidth: '700px' },
         },
         {
           key: 'process',
@@ -62,21 +88,21 @@ export default {
           class: 'td-xuly btn-process',
           thClass: 'hidden-sortable',
           sortable: false,
-          thStyle: {width: '130px', minWidth: '130px'},
+          thStyle: { width: '130px', minWidth: '130px' },
         }
       ],
-      listLoaiDanhMuc:[]
+      listLoaiDanhMuc: []
     };
   },
   validations: {
     model: {
-      ten: {required},
-      content: {required},
+      name: { required },
+      content: { required },
     },
   },
   created() {
     this.fnGetList();
-    this.getListLoaiDanhMuc();
+    this.getListKnowledge();
   },
   watch: {
     showModal(status) {
@@ -95,8 +121,8 @@ export default {
     fnGetList() {
       this.$refs.tblList?.refresh()
     },
-    async getListLoaiDanhMuc(){
-      await  this.$store.dispatch("knowledgeStore/get").then((res) =>{
+    async getListKnowledge() {
+      await this.$store.dispatch("knowledgeStore/get").then((res) => {
         this.listLoaiDanhMuc = res.data || [];
       })
     },
@@ -148,9 +174,9 @@ export default {
           container: this.$refs.formContainer,
         });
         if (
-            this.model.id != 0 &&
-            this.model.id != null &&
-            this.model.id
+          this.model.id != 0 &&
+          this.model.id != null &&
+          this.model.id
         ) {
           // Update model
           await this.$store.dispatch("knowledgeStore/update", this.model).then((res) => {
@@ -175,7 +201,7 @@ export default {
       }
       this.submitted = false;
     },
-    myProvider (ctx) {
+    myProvider(ctx) {
       const params = {
         start: ctx.currentPage,
         limit: ctx.perPage,
@@ -185,16 +211,16 @@ export default {
       }
       this.loading = true
       try {
-        let promise =  this.$store.dispatch("knowledgeStore/getPagingParams", params)
+        let promise = this.$store.dispatch("knowledgeStore/getPagingParams", params)
         return promise.then(resp => {
-          if(resp.resultCode == CONSTANTS.SUCCESS){
+          if (resp.resultCode == CONSTANTS.SUCCESS) {
             let data = resp.data;
             this.totalRows = data.totalRows
             let items = data.data
             this.numberOfElement = items.length
             this.loading = false
             return items || []
-          }else{
+          } else {
             return [];
           }
         })
@@ -202,7 +228,7 @@ export default {
         this.loading = false
       }
     },
-    clearSearch(){
+    clearSearch() {
       this.filter = null;
     }
   }
@@ -216,22 +242,16 @@ export default {
           <div class="card-body">
             <div class="row">
               <div class="col-md-4 col-12 d-flex align-items-center">
-                <h4 class="font-size-18 fw-bold cs-title-page">Danh mục</h4>
+                <h4 class="font-size-18 fw-bold cs-title-page">Hướng dẫn xử lý yêu cầu lỗi</h4>
               </div>
               <div class="col-md-8 col-12 text-end">
-                <b-button v-b-toggle.collapseSearch variant="light"
-                          class="btn w-md btn-primary-outline me-2" size="sm">
+                <b-button v-b-toggle.collapseSearch variant="light" class="btn w-md btn-primary-outline me-2" size="sm">
                   <i class="fas fa-caret-down align-middle me-2"></i>
                   Tìm kiếm
                 </b-button>
-                <b-button
-                    variant="primary"
-                    type="button"
-                    class="btn w-md btn-primary"
-                    @click="showModal = true"
-                    size="sm"
-                >
-                  <i class="mdi mdi-plus me-1"></i> Tạo danh mục
+                <b-button variant="primary" type="button" class="btn w-md btn-primary" @click="showModal = true"
+                  size="sm">
+                  <i class="mdi mdi-plus me-1"></i> Tạo hướng dẫn xử lý 
                 </b-button>
               </div>
             </div>
@@ -242,26 +262,19 @@ export default {
                     <!-- Nội dung -->
                     <div class="flex-grow-1 me-2">
                       <label>Nội dung</label>
-                      <input
-                          v-model = "filter"
-                          type="text"
-                          class="form-control"
-                          placeholder="Tìm kiếm ..."
-                      />
+                      <input v-model="filter" type="text" class="form-control" placeholder="Tìm kiếm ..." />
                       <i class="bx bx-search-alt search-icon"></i>
                     </div>
                     <div class="flex-grow-0 ms-2">
                       <div class="d-flex justify-content-between align-items-center flex-wrap">
                         <div class="flex-grow-1 mt-xl-0 mt-2">
-                          <b-button @click="handleSearch" variant="light"
-                                    class="btn w-md btn-primary me-2" size="md">
+                          <b-button @click="handleSearch" variant="light" class="btn w-md btn-primary me-2" size="md">
                             <i class="fas fa-search align-middle me-2"></i>
                             Tìm kiếm
                           </b-button>
                         </div>
                         <div class="flex-grow-1 mt-xl-0 mt-2">
-                          <b-button @click="clearSearch" variant="light"
-                                    class="btn w-md btn-secondary me-2" size="md">
+                          <b-button @click="clearSearch" variant="light" class="btn w-md btn-secondary me-2" size="md">
                             <i class="fas fa-redo-alt align-middle me-2"></i>
                             Làm mới
                           </b-button>
@@ -283,93 +296,59 @@ export default {
             <div class="row mb-2">
               <div class="col-sm-8">
                 <div class="text-sm-end">
-                  <b-modal
-                      v-model="showModal"
-                      title="Thông tin danh mục"
-                      title-class="text-black font-18"
-                      body-class="p-3"
-                      hide-footer
-                      centered
-                      no-close-on-backdrop
-                      size="lg"
-                  >
-                    <form @submit.prevent="handleSubmit"
-                          ref="formContainer">
+                  <b-modal v-model="showModal" title="Thông tin danh mục" title-class="text-black font-18"
+                    body-class="p-3" hide-footer centered no-close-on-backdrop size="lg">
+                    <form @submit.prevent="handleSubmit" ref="formContainer">
                       <div class="row">
                         <div class="col-12">
                           <div class="mb-3">
                             <label class="text-left">Tên hướng dẫn</label>
                             <span style="color: red">&nbsp;*</span>
-                            <input type="hidden" v-model="model.id"/>
-                            <input
-                                id="name"
-                                v-model.trim="model.name"
-                                type="text"
-                                class="form-control"
-                                placeholder="Nhập tên danh mục"
-                                :class="{
+                            <input type="hidden" v-model="model.id" />
+                            <input id="name" v-model.trim="model.name" type="text" class="form-control"
+                              placeholder="Nhập tên hướng dẫn" :class="{
                                 'is-invalid':
                                   submitted && $v.model.name.$error,
-                              }"
-                            />
-                            <div
-                                v-if="submitted && !$v.model.name.required"
-                                class="invalid-feedback"
-                            >
+                              }" />
+                            <div v-if="submitted && !$v.model.name.required" class="invalid-feedback">
                               Tên danh mục không được để trống.
                             </div>
                           </div>
                         </div>
-                        <div class="col-12">
-                          <div class="mb-3">
-                            <label class="text-left">Nhập content</label>
-                            <span style="color: red">&nbsp;*</span>
-                            <input type="hidden" v-model="model.id"/>
-                            <input
-                                id="color"
-                                v-model="model.content"
-                                type="text"
-                                min="0"
-                                oninput="validity.valid||(value='');"
-                                class="form-control"
-                                placeholder="Nhập content"
-                                :class="{
-                                'is-invalid':
-                                  submitted && $v.model.content.$error,
-                              }"
-                            />
-                            <div
-                                v-if="submitted && !$v.model.content.required"
-                                class="invalid-feedback"
-                            >
-                              Màu sắc không được để trống.
+                        <div class="col-md-12">
+                          <div class="mb-2">
+                            <label class="form-label cs-title-form" for="validationCustom01"> Nội dung</label>
+                            <span class="text-danger">*</span>
+                            <ckeditor-nuxt v-model="model.content" :config="editorConfig" />
+                            <div v-if="submitted && !$v.model.content.required" class="invalid-feedback">
+                              Nội dung không được để trống.
                             </div>
                           </div>
                         </div>
                         <!-- <div class="col-12">
-                          <div class="mb-3">
-                            <label class="text-left">Loại danh mục</label>
-                            <span style="color: red">&nbsp;*</span>
-                            <multiselect v-model="model.loaiDanhMuc"
-                                         :options="listLoaiDanhMuc"
-                                         label="name"
-                                         selectLabel="Nhấn vào để chọn"
-                                         deselectLabel="Nhấn vào để xóa"
-                                         track-by="id"
-                                         :class="{
-                                'is-invalid':
-                                  submitted && $v.model.loaiDanhMuc.$error,
-                              }"
-                                         placeholder="Chọn loại danh mục"
-                            ></multiselect>
-                            <div
-                                v-if="submitted && !$v.model.loaiDanhMuc.required"
-                                class="invalid-feedback"
-                            >
-                              Loại danh mục không được trống.
-                            </div>
-                          </div>
-                        </div> -->
+                                  <div class="mb-3">
+                                    <label class="text-left">Loại danh mục</label>
+                                    <span style="color: red">&nbsp;*</span>
+                                    <multiselect v-model="model.loaiDanhMuc"
+                                                 :options="listLoaiDanhMuc"
+                                                 label="name"
+                                                 selectLabel="Nhấn vào để chọn"
+                                                 deselectLabel="Nhấn vào để xóa"
+                                                 track-by="id"
+                                                 :class="{
+                                        'is-invalid':
+                                          submitted && $v.model.loaiDanhMuc.$error,
+                                      }"
+                                                 placeholder="Chọn loại danh mục"
+                                    ></multiselect>
+                                    <div
+                                        v-if="submitted && !$v.model.loaiDanhMuc.required"
+                                        class="invalid-feedback"
+                                    >
+                                      Loại danh mục không được trống.
+                                    </div>
+                                  </div>
+                                </div> -->
                       </div>
                       <div class="text-end pt-2 mt-3">
                         <b-button variant="light" class="w-md" size="sm" @click="showModal = false">
@@ -391,59 +370,37 @@ export default {
                     <div id="tickets-table_length" class="dataTables_length">
                       <label class="d-inline-flex align-items-center">
                         Hiện
-                        <b-form-select
-                            class="form-select form-select-sm"
-                            v-model="perPage"
-                            size="sm"
-                            :options="pageOptions"
-                        ></b-form-select
-                        >&nbsp;dòng
+                        <b-form-select class="form-select form-select-sm" v-model="perPage" size="sm"
+                          :options="pageOptions"></b-form-select>&nbsp;dòng
                       </label>
                     </div>
                   </div>
                 </div>
                 <div class="table-responsive-sm">
-                  <b-table
-                      class="datatables custom-table"
-                      :items="myProvider"
-                      :fields="fields"
-                      responsive="sm"
-                      :per-page="perPage"
-                      :current-page="currentPage"
-                      :sort-by.sync="sortBy"
-                      :sort-desc.sync="sortDesc"
-                      :filter="filter"
-                      :filter-included-fields="filterOn"
-                      ref="tblList"
-                      primary-key="id"
-                      :busy.sync="isBusy"
-                      tbody-tr-class="b-table-chucvu"
-                  >
+                  <b-table class="datatables custom-table" :items="myProvider" :fields="fields" responsive="sm"
+                    :per-page="perPage" :current-page="currentPage" :sort-by.sync="sortBy" :sort-desc.sync="sortDesc"
+                    :filter="filter" :filter-included-fields="filterOn" ref="tblList" primary-key="id" :busy.sync="isBusy"
+                    tbody-tr-class="b-table-chucvu">
                     <template v-slot:cell(STT)="data">
-                      {{ data.index + ((currentPage-1)*perPage) + 1  }}
+                      {{ data.index + ((currentPage - 1) * perPage) + 1 }}
                     </template>
                     <template v-slot:cell(name)="data">
                       <template v-if="data.item.name">
-                        <div >
-                        <span v-bind:style="{ background: data.item.color}">{{data.item.name}}</span>
-                      </div>
+                        <div>
+                          <span>{{ data.item.name }}</span>
+                        </div>
                       </template>
                     </template>
+                    <template v-slot:cell(content)="data">
+                          <span>{{ data.item.content }}</span>
+                    </template>
                     <template v-slot:cell(process)="data">
-                      <button
-                          type="button"
-                          size="sm"
-                          class="btn btn-edit btn-sm"
-                          data-toggle="tooltip" data-placement="bottom" title="Cập nhật"
-                          v-on:click="handleUpdate(data.item.id)">
+                      <button type="button" size="sm" class="btn btn-edit btn-sm" data-toggle="tooltip"
+                        data-placement="bottom" title="Cập nhật" v-on:click="handleUpdate(data.item.id)">
                         <i class="fas fa-pencil-alt"></i>
                       </button>
-                      <button
-                          type="button"
-                          size="sm"
-                          class="btn btn-delete btn-sm"
-                          data-toggle="tooltip" data-placement="bottom" title="Xóa"
-                          v-on:click="handleShowDeleteModal(data.item.id)">
+                      <button type="button" size="sm" class="btn btn-delete btn-sm" data-toggle="tooltip"
+                        data-placement="bottom" title="Xóa" v-on:click="handleShowDeleteModal(data.item.id)">
                         <i class="fas fa-trash-alt"></i>
                       </button>
                     </template>
@@ -457,18 +414,13 @@ export default {
                 </div>
                 <div class="row">
                   <b-col>
-                    <div>Hiển thị {{numberOfElement}} trên tổng số {{totalRows}} dòng</div>
+                    <div>Hiển thị {{ numberOfElement }} trên tổng số {{ totalRows }} dòng</div>
                   </b-col>
                   <div class="col">
-                    <div
-                        class="dataTables_paginate paging_simple_numbers float-end">
+                    <div class="dataTables_paginate paging_simple_numbers float-end">
                       <ul class="pagination pagination-rounded mb-0">
-                        <b-pagination
-                            v-model="currentPage"
-                            :total-rows="totalRows"
-                            :per-page="perPage"
-                            size="sm"
-                        ></b-pagination>
+                        <b-pagination v-model="currentPage" :total-rows="totalRows" :per-page="perPage"
+                          size="sm"></b-pagination>
                       </ul>
                     </div>
                   </div>
@@ -477,29 +429,17 @@ export default {
             </div>
           </div>
         </div>
-        <b-modal
-            v-model="showDeleteModal"
-            centered
-            title="Xóa dữ liệu"
-            title-class="font-18"
-            no-close-on-backdrop
-        >
+        <b-modal v-model="showDeleteModal" centered title="Xóa dữ liệu" title-class="font-18" no-close-on-backdrop>
           <p>
             Dữ liệu xóa sẽ không được phục hồi!
           </p>
           <template #modal-footer>
-            <b-button v-b-modal.modal-close_visit
-                      size="sm"
-                      class="btn btn-outline-info w-md"
-                      v-on:click="showDeleteModal = false">
+            <b-button v-b-modal.modal-close_visit size="sm" class="btn btn-outline-info w-md"
+              v-on:click="showDeleteModal = false">
               Đóng
             </b-button>
-            <b-button v-b-modal.modal-close_visit
-                      size="sm"
-                      variant="danger"
-                      type="button"
-                      class="w-md"
-                      v-on:click="handleDelete">
+            <b-button v-b-modal.modal-close_visit size="sm" variant="danger" type="button" class="w-md"
+              v-on:click="handleDelete">
               Xóa
             </b-button>
           </template>
@@ -512,39 +452,45 @@ export default {
 .td-stt {
   text-align: center;
 }
+
 .td-xuly {
   text-align: center;
 }
-.table>tbody> tr >td{
+
+.table>tbody>tr>td {
   padding: 0px;
   line-height: 30px;
 }
-.hidden-sortable:after, .hidden-sortable:before {
+
+.hidden-sortable:after,
+.hidden-sortable:before {
   display: none !important;
 }
 
 @media only screen and (max-width: 768px) {
-  .b-table-chucvu>td:nth-of-type(1):before{
+  .b-table-chucvu>td:nth-of-type(1):before {
     content: "STT";
     font-weight: bold;
     color: #00568c;
   }
+
   .b-table-chucvu>td:nth-of-type(2):before {
     content: "Tên";
     font-weight: bold;
     color: #00568c;
   }
+
   .b-table-chucvu>td:nth-of-type(3):before {
     content: "Màu sắc";
     font-weight: bold;
     color: #00568c;
   }
+
   .b-table-chucvu>td:nth-of-type(4):before {
     content: "";
     font-weight: bold;
     color: #00568c;
   }
 }
-
 </style>
 

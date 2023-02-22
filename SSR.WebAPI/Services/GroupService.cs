@@ -6,6 +6,7 @@ using SSR.WebAPI.Helpers;
 using SSR.WebAPI.Models;
 using MongoDB.Driver;
 using EResultResponse = SSR.WebAPI.Exceptions.EResultResponse;
+using SSR.WebAPI.Params;
 
 
 namespace SSR.WebAPI.Services;
@@ -129,7 +130,27 @@ public class GroupService : BaseService, IGroupService
             .FirstOrDefaultAsync();
     }
 
+    public async Task<PagingModel<Group>> GetPaging(PagingParam param)
+    {
+        PagingModel<Group> result = new PagingModel<Group>();
+        var builder = Builders<Group>.Filter;
+        var filter = builder.Empty;
+        filter = builder.And(filter, builder.Where(x => x.IsDeleted == false));
+        if (!String.IsNullOrEmpty(param.Content))
+        {
+            filter = builder.And(filter,
+                builder.Where(x => x.Name.Trim().ToLower().Contains(param.Content.Trim().ToLower())));
+        }
 
-   
+
+        result.TotalRows = await _context.Group.CountDocumentsAsync(filter);
+        result.Data = await _context.Group.Find(filter)
+
+            .Skip(param.Skip)
+            .Limit(param.Limit)
+            .ToListAsync();
+        return result;
+    }
+
 }
 

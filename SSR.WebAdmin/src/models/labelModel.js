@@ -1,28 +1,35 @@
 ﻿const toJson = (item) => {
     return {
         id : item.id,
-        name: item.name,
-        content : item.content ,
+        name : item.name ,
         //loaiDanhMuc:item.loaiDanhMuc,
+        color:item.color,
+        parentId: item.parentId,
+        knowledge: item.knowledge,
     }
 }
 const fromJson = (item) => {
     return {
         id : item.id,
-        name: item.name,
-        content : item.content ,
+        name : item.name ,
         //loaiDanhMuc:item.loaiDanhMuc,
+        color:item.color,
+        parentId: item.parentId,
+        knowledge: item.knowledge,
     }
 }
 
 const baseJson = () => {
     return {
         id : null,
-        name: null,
-        content : null ,
-        //loaiDanhMuc:null,
+        name : null ,
+        color: null,
+        parentId: null,
+        knowledge: null,
     }
 }
+
+
 
 const toListModel = (items) =>{
     if(items.length > 0){
@@ -35,6 +42,6 @@ const toListModel = (items) =>{
     return [];
 }
 
-export const knowledgeModel = {
+export const labelModel = {
     toJson, fromJson, baseJson, toListModel
 }
