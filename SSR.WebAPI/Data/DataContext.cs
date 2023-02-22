@@ -49,6 +49,8 @@ public class DataContext
     private readonly IMongoCollection<Group> _group;
     private readonly IDbSettings _settings;
 
+    private readonly IMongoCollection<Label> _nhan;
+
     public DataContext(IDbSettings settings)
     {
         _settings = settings;
@@ -96,8 +98,8 @@ public class DataContext
         _label = _context.GetCollection<Phanloai>("Label");
         _knowledge = _context.GetCollection<Knowledge>("Knowledge");
         _group = _context.GetCollection<Group>(_settings.GroupCollectionName);
-        
-}
+        _nhan = _context.GetCollection<Label>("Label");
+    }
 
     public IMongoDatabase Database
     {
@@ -148,4 +150,5 @@ public class DataContext
     public IMongoCollection<Phanloai> Label { get => _label; }
     public IMongoCollection<Knowledge> Knowledge { get => _knowledge; }
     public IMongoCollection<Group> Group { get => _group; }
+    public IMongoCollection<Label> Nhan { get => _nhan; }
 }

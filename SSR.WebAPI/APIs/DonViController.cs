@@ -1,5 +1,4 @@
-﻿using System;
-using SSR.WebAPI.Data;
+﻿using SSR.WebAPI.Data;
 using SSR.WebAPI.Exceptions;
 using SSR.WebAPI.Helpers;
 using SSR.WebAPI.Interfaces;

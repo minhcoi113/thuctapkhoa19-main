@@ -153,10 +153,10 @@ export default [{
         component: () => import("../pages/chucVu"),
     },
     {
-        path: "/loai-danh-muc",
+        path: "/nhan",
         name: "Nhãn",
         // meta: {},
-        component: () => import("../pages/loaiDanhMuc"),
+        component: () => import("../pages/label"),
     },
     {
         path: "/huong-dan-xu-ly",
