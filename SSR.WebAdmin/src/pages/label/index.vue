@@ -55,7 +55,6 @@ export default {
   },
   validations: {
     model: {
-      maDonVi: { required },
       name: { required },
       capDV: { required },
       knowledge: { required },
@@ -256,11 +255,9 @@ export default {
             <form @submit.prevent="handleSubmit" ref="formContainer">
               <div class="row">
                 <div class="col-12">
-                  <input type="hidden" v-model="model.maDonVi" />
                   <div class="mb-3">
                     <label class="text-left">Tên nhãn</label>
                     <span style="color: red">&nbsp;*</span>
-                    <input type="hidden" v-model="model.id" />
                     <input id="name" v-model.trim="model.name" type="text" class="form-control"
                       placeholder="Nhập tên nhãn" :class="{
                         'is-invalid':
@@ -286,7 +283,7 @@ export default {
                     <label class="text-left">Chọn màu phân loại nhãn</label>
                     <span style="color: red">&nbsp;*</span>
                     <br>
-                    <input type="hidden" v-model="model.id" />
+                    <input type="hidden" v-model="model.color" />
                     <input id="color" v-model="model.color" type="color" min="0" oninput="validity.valid||(value='');"
                       class="choosecolor" :class="{
                         'is-invalid':
