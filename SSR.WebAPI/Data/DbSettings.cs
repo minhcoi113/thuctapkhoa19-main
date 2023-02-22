@@ -37,6 +37,7 @@ public class DbSettings : IDbSettings
     public string ValueCollectionName { get; set; }
     public string DonViCollectionName { get; set; }
     public string TrangThaiCollectionName { get; set; }
+    public string ProjectCollectionName { get; set; }
 }
 
 public interface IDbSettings
@@ -50,7 +51,7 @@ public interface IDbSettings
     string MenuCollectionName { get; set; }
     string FileCollectionName { get; set; }
     string RefreshTokenCollectionName { get; set; }
-
+    string ProjectCollectionName { get; set; }
 
     string TagsCollectionName { get; set; }
     string CategoriesCollectionName { get; set; }

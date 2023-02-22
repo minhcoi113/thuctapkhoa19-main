@@ -2,6 +2,7 @@ using SSR.WebAPI.Models;
 using MongoDB.Driver;
 using File = SSR.WebAPI.Models.File;
 using Tag = SSR.WebAPI.Models.Tag;
+using SSR.WebAPI.Interfaces;
 
 namespace SSR.WebAPI.Data;
 
@@ -48,7 +49,7 @@ public class DataContext
     private readonly IMongoCollection<Knowledge> _knowledge;
     private readonly IMongoCollection<Group> _group;
     private readonly IDbSettings _settings;
-
+    private readonly IMongoCollection<Project> _project;
     public DataContext(IDbSettings settings)
     {
         _settings = settings;
@@ -66,7 +67,7 @@ public class DataContext
         _file = _context.GetCollection<File>(_settings.FileCollectionName);
         _logging = _context.GetCollection<Logging>(_settings.LoggingCollectionName);
         _refreshToken = _context.GetCollection<RefreshToken>(_settings.RefreshTokenCollectionName);
-
+        
         // Nghiệp vụ
         _tag = _context.GetCollection<Tag>(_settings.TagsCollectionName);
         _category = _context.GetCollection<Category>(_settings.CategoriesCollectionName);
@@ -96,7 +97,7 @@ public class DataContext
         _label = _context.GetCollection<Phanloai>("Label");
         _knowledge = _context.GetCollection<Knowledge>("Knowledge");
         _group = _context.GetCollection<Group>(_settings.GroupCollectionName);
-        
+        _project = _context.GetCollection<Project>("Project");
 }
 
     public IMongoDatabase Database
@@ -119,7 +120,7 @@ public class DataContext
     public IMongoCollection<Tag> Tags { get => _tag; }
     public IMongoCollection<Category> Categories { get => _category; }
     public IMongoCollection<Post> Posts { get => _post; }
-
+    public IMongoCollection<Project> Project { get => _project; }
     public IMongoCollection<Video> Video { get => _video; }
     public IMongoCollection<Gallery> Gallery { get => _gallery; }
     public IMongoCollection<Room> Room { get => _room; }

@@ -403,17 +403,17 @@
                  label: "Level 1.2",
                  parentId: 75,
                  subItems: [{
-                         id: 78,
-                         label: "Level 2.1",
-                         link: "#",
-                         parentId: 75
-                     },
-                     {
-                         id: 79,
-                         label: "Level 2.2",
-                         link: "#",
-                         parentId: 75
-                     }
+                id: 78,
+                label: "Level 2.1",
+                link: "#",
+                parentId: 75
+            },
+            {
+                id: 79,
+                label: "Level 2.2",
+                link: "#",
+                parentId: 75
+            }
                  ]
              }
          ]

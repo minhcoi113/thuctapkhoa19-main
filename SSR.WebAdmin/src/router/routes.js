@@ -204,12 +204,35 @@ export default [{
         // meta: {},
         component: () => import("../pages/post/create"),
     },
-
+    {
+        path: "/them-project/:id?",
+        name: "Thêm project",
+        // meta: {},
+        component: () => import("../pages/project/create"),
+    },
     {
         path: "/tat-ca-bai-viet",
         name: "TatCabaiViet",
         // meta: {},
         component: () => import("../pages/post"),
+    },
+    {
+        path: "/project",
+        name: "TatCaProject",
+        // meta: {},
+        component: () => import("../pages/project"),
+    },
+    {
+        path: "/group",
+        name: "group",
+        // meta: {},
+        component: () => import("../pages/group"),
+    },
+    {
+        path: "/group/:id?",
+        name: "them-group",
+        // meta: {},
+        component: () => import("../pages/project/create"),
     },
     {
         path: "/tin-tuc-su-kien",

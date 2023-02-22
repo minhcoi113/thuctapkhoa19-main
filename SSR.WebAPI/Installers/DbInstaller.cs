@@ -43,7 +43,7 @@ public class DbInstaller : IInstaller
         services.AddScoped<INhomTieuChiService, NhomChiTieuService>();
         services.AddScoped<ITrangThaiService, TrangThaiService>();
         services.AddScoped<IValueService, ValueService>();
-
+        services.AddScoped<IProjectService,ProjectService>();
         services.AddScoped<IPhanloaiService, PhanloaiService>();
         services.AddScoped<IKnowledgeService, KnowledgeService>();
     }
