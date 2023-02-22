@@ -7,58 +7,59 @@ const toJson = (item) => {
         fullName: item.fullName,
         phoneNumber: item.phoneNumber,
         email: item.email,
-        note: item.note,
-        avatar: item.avatar,
-        donVi: item.donVi,
-        roles: item.roles,
-        permissions: item.permissions,
+        //note: item.note,
+        //avatar: item.avatar,
+        role: item.role
+        /* 
+        donVi: item.donVi,permissions: item.permissions,
         menu: item.menu,
         kySo: item.kySo,
         chucVu: item.chucVu,
         userNameKySo: item.userNameKySo,
-        passwordKySo: item.passwordKySo
+        passwordKySo: item.passwordKySo */
     }
 }
 
 const fromJson = (item) => {
     return {
         id: item.id,
-        usrName: item.userName,
+        userName: item.userName,
         firstName: item.firstName,
         lastName: item.lastName,
         fullName: item.fullName,
         phoneNumber: item.phoneNumber,
         email: item.email,
-        note: item.note,
-        avatar: item.avatar,
-        donVi: item.donVi,
-        roles: item.roles,
+        //note: item.note,
+        //avatar: item.avatar,  
+        role: item.role
+        /* donVi: item.donVi,
         permissions: item.permissions,
         menu: item.menu,
         kySo: item.kySo,
         chucVu: item.chucVu,
         userNameKySo: item.userNameKySo,
-        passwordKySo: item.passwordKySo
+        passwordKySo: item.passwordKySo */
     }
 }
 
 const baseJson = () => {
     return {
         id: null,
-        usrName: null,
+        userName: null,
         firstName: null,
         lastName: null,
         fullName: null,
         phoneNumber: null,
         email: null,
-        note: null,
-        avatar: null,
-        kySo: null,
-        donVi: {id: null, ten: null},
-        roles: null,
+        role: null,
+        //note: null,
+        //avatar: null
+        
+        /*donVi: {id: null, ten: null}, 
         chucVu: null,
+        kySo: null,
         userNameKySo: null,
-        passwordKySo: null
+        passwordKySo: null */
     }
 }
 

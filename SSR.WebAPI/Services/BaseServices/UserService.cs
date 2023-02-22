@@ -107,7 +107,8 @@ namespace SSR.WebAPI.Services
                 FullName = model.LastName + " " + model.FirstName,
                 PhoneNumber = model.PhoneNumber,
                 Email = model.Email,
-                Note = model.Note,
+                Role = model.Role,
+                Note = model.Note
 
             };
 

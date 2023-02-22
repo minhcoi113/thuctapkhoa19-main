@@ -70,6 +70,14 @@ export default [{
         }
     },
     {
+        path: '/group',
+        name: 'Group',
+        component: () => import('../pages/group/group'),
+        meta: {
+            authRequired: true,
+        }
+    },
+    {
         path: "/nhom-quyen",
         name: "NhomQuyen",
         meta: {
