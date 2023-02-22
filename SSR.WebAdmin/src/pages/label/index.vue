@@ -56,7 +56,7 @@ export default {
   validations: {
     model: {
       name: { required },
-      capDV: { required },
+      color: { required },
       knowledge: { required },
     },
   },

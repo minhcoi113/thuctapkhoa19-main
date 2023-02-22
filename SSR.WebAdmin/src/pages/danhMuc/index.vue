@@ -96,7 +96,7 @@ export default {
   },
   validations: {
     model: {
-      ten: { required },
+      name: { required },
       content: { required },
     },
   },

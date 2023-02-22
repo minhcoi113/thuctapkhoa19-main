@@ -4,7 +4,8 @@
         name : item.name ,
         //loaiDanhMuc:item.loaiDanhMuc,
         color:item.color,
-        parentId: item.parentId
+        parentId: item.parentId,
+        knowledge: item.knowledge,
     }
 }
 const fromJson = (item) => {
@@ -13,7 +14,8 @@ const fromJson = (item) => {
         name : item.name ,
         //loaiDanhMuc:item.loaiDanhMuc,
         color:item.color,
-        parentId: item.parentId
+        parentId: item.parentId,
+        knowledge: item.knowledge,
     }
 }
 
@@ -23,6 +25,7 @@ const baseJson = () => {
         name : null ,
         color: null,
         parentId: null,
+        knowledge: null,
     }
 }
 
