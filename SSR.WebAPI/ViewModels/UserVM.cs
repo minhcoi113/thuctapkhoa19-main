@@ -1,3 +1,5 @@
+using SSR.WebAPI.Models;
+
 namespace SSR.WebAPI.ViewModels
 {
     public class UserVM
@@ -7,6 +9,7 @@ namespace SSR.WebAPI.ViewModels
         public string Password { get; set; }
         public byte[] PasswordSalt { get; set; }
         public byte[] PasswordHash { get; set; }
+        public List<Role> Role { get; set; }
         public string newPass { get; set; }
         public string confirmPass { get; set; }
     }

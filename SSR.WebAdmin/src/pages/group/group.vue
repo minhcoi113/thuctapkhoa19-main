@@ -6,21 +6,22 @@ import appConfig from "@/app.config";
 import {notifyModel} from "@/models/notifyModel";
 import {pagingModel} from "@/models/pagingModel";
 import Multiselect from "vue-multiselect";
-import {userModel} from "@/models/userModel";
+import {groupModel} from "@/models/groupModel";
 
 export default {
   page: {
-    title: "Tài khoản",
+    title: "Quản lý nhóm người dùng",
     meta: [{name: "description", content: appConfig.description}],
   },
   components: {Layout, Multiselect},
   data() {
     return {
-      title: "Tài khoản",
+      title: "Quản lý nhóm người dùng",
       items: [
         {
-          text: "Tài khoản",
-          href: '/tai-khoan'
+          text: "group",
+          href:"/group",
+          // active: true,
         },
         {
           text: "Danh sách",
@@ -37,21 +38,21 @@ export default {
           thStyle: {width: '30px', minWidth: '30px'}
         },
         {
-          key: "userName",
-          label: "Tài khoản",
+          key: "name",
+          label: "Tên nhóm",
           class: 'td-xuly',
           sortable: true,
           thStyle: {width: '80px', minWidth: '80px'},
         },
         {
-          key: "fullName",
-          label: "Họ và tên",
+          key: "description",
+          label: "Miêu tả",
           class: 'td-ten',
           sortable: true,
         },
         {
-          key: "role",
-          label: "Quyền",
+          key: "members",
+          label: "Thành viên",
           class: 'td-ten',
           sortable: true,
           thStyle: {width: '80px', minWidth: '80px'},
@@ -77,10 +78,10 @@ export default {
       filterOn: [],
       numberOfElement: 1,
       totalRows: 1,
-      model: userModel.baseJson(),
-      listCoQuan: [],
-      listRole: [],
-      listChucVu: [],
+      model: groupModel.baseJson(),
+      //listCoQuan: [],
+      //listRole: [],
+      listUser: [],
       pagination: pagingModel.baseJson(),
       itemFilter:{
         code: null,
@@ -90,11 +91,9 @@ export default {
   },
   validations: {
     model: {
-      userName: {required},
-      firstName: {required},
-      lastName: {required},
-      role : {required},
-      
+      name: {required},
+      description: {required},
+      members: {required}
     },
   },
   methods: {
@@ -110,26 +109,14 @@ export default {
     async fnGetList() {
          this.$refs.tblList?.refresh()
     },
-    async getListRole(){
-      await  this.$store.dispatch("roleStore/getAll").then((res) =>{
-        this.listRole = res.data || [];
+    async getListUser(){
+      await  this.$store.dispatch("userStore/getAll").then((res) =>{
+        this.listUser = res.data || [];
       })
     },
-   
-   /*  async getListCoQuan(){
-      await  this.$store.dispatch("donViStore/getTree").then((res) =>{
-        this.listCoQuan = res.data || [];
-      })
-    }, */
-    // async GetPagingParam(params) {
-    //   await this.$store.dispatch("userStore/getPagingParams", params).then((res) => {
-    //     this.pagination = pagingModel.fromJson(res.data);
-    //     this.data = res.data.data || [];
-    //   })
-    // },
     async handleDelete() {
       if (this.model.id != 0 && this.model.id != null && this.model.id) {
-        await this.$store.dispatch("userStore/delete", this.model.id).then((res) => {
+        await this.$store.dispatch("groupStore/delete", this.model.id).then((res) => {
           if (res.resultCode==='SUCCESS') {
             this.fnGetList();
             this.showDeleteModal = false;
@@ -158,20 +145,20 @@ export default {
             this.model.id
         ) {
           // Update model
-          await this.$store.dispatch("userStore/update", this.model).then((res) => {
+          await this.$store.dispatch("groupStore/update", this.model).then((res) => {
             if (res.resultCode === 'SUCCESS') {
               this.showModal = false;
-              this.model= userModel.baseJson();
+              this.model= groupModel.baseJson();
               this.$refs.tblList.refresh();
             }
             this.$store.dispatch("snackBarStore/addNotify", notifyModel.addMessage(res))
           });
         } else {
           // Create model
-          await this.$store.dispatch("userStore/create", this.model).then((res) => {
+          await this.$store.dispatch("groupStore/create", this.model).then((res) => {
             if (res.resultCode === 'SUCCESS') {
               this.fnGetList(); 
-              this.model= userModel.baseJson();
+              this.model= groupModel.baseJson();
               this.showModal = true;
             }
             this.$store.dispatch("snackBarStore/addNotify", notifyModel.addMessage(res))
@@ -182,20 +169,20 @@ export default {
       this.submitted = false;
     },
     async handleUpdate(id) {
-      await this.$store.dispatch("userStore/getById", id).then((res) => {
+      await this.$store.dispatch("groupStore/getbyid", id).then((res) => {
         if (res.resultCode==='SUCCESS') {
-          this.model = userModel.toJson(res.data);
+          this.model = groupModel.toJson(res.data);
           this.showModal = true;
         } else {
           this.$store.dispatch("snackBarStore/addNotify", notifyModel.addMessage(res));
         }
       });
     },
-    addCoQuanToModel : function (node, instanceId ){
+    /* addCoQuanToModel : function (node, instanceId ){
       if(node.id){
         this.model.donVi = {id: node.id, ten: node.label};
       }
-    },
+    }, */
     myProvider (ctx) {
       const params = {
         start: ctx.currentPage,
@@ -206,7 +193,7 @@ export default {
       }
       this.loading = true
       try {
-        let promise =  this.$store.dispatch("userStore/getPagingParams", params)
+        let promise =  this.$store.dispatch("groupStore/getPagingParams", params)
         return promise.then(resp => {
           let items = resp.data.data
           this.totalRows = resp.data.totalRows
@@ -218,7 +205,7 @@ export default {
         this.loading = false
       }
     },
-    async handleExport() {
+    /* async handleExport() {
       await this.$store
           .dispatch("exportStore/dsUser")
           .then((res) => {
@@ -236,7 +223,7 @@ export default {
           .catch((e) => {
             console.log(e);
           });
-    },
+    }, */
     base64ToArrayBuffer(base64) {
       var binaryString = window.atob(base64);
       var binaryLen = binaryString.length;
@@ -250,8 +237,8 @@ export default {
   },
   created(){
   
-    this.getListRole();
-    //this.getListCoQuan();
+    this.getListUser();
+    
   },
   mounted() {
 
@@ -259,13 +246,10 @@ export default {
   watch: {
     model: {
       deep: true,
-      handler(val) {
-        // addCoQuanToModel()
-        // this.saveValueToLocalStorage()
-      }
+      handler(val) {}
     },
     showModal(status) {
-      if (status == false) this.model = userModel.baseJson();
+      if (status == false) this.model = groupModel.baseJson();
     },
     // model() {
     //   return this.model;
@@ -288,7 +272,7 @@ export default {
         <div class="card-body">
           <div class="row">
             <div class="col-md-4 col-12 d-flex align-items-center">
-              <h4 class="font-size-18 fw-bold cs-title-page">Tài khoản</h4>
+              <h4 class="font-size-18 fw-bold cs-title-page">Nhóm</h4>
             </div>
             <div class="col-md-8 col-12 text-end">
               <b-button v-b-toggle.collapseSearch variant="light"
@@ -303,7 +287,7 @@ export default {
                   size="sm"
                   @click="showModal = true"
               >
-                <i class="mdi mdi-plus me-1"></i> Tạo tài khoản
+                <i class="mdi mdi-plus me-1"></i> Tạo nhóm
               </b-button>
             </div>
           </div>
@@ -321,18 +305,6 @@ export default {
                         class="form-control"
                         v-model="itemFilter.code"
                         placeholder="Nhập mã đơn vị.."
-                    />
-                  </div>
-                  <!-- Nội dung -->
-                  <div class="flex-grow-1 me-2">
-                    <label>Tên đơn vị</label>
-                    <input
-                        size="sm"
-                        type="text"
-                        name="untyped-input"
-                        class="form-control"
-                        v-model="itemFilter.name"
-                        placeholder="Nhập tên đơn vị..."
                     />
                   </div>
                   <!--  Xử lý -->
@@ -394,7 +366,7 @@ export default {
 
                   <b-modal
                       v-model="showModal"
-                      title="Thông tin tài khoản"
+                      title="Thông tin group"
                       title-class="text-black font-18"
                       body-class="p-3"
                       hide-footer
@@ -406,146 +378,69 @@ export default {
                           ref="formContainer"
                     >
                       <div class="row">
-                        <div class="col-6">
+                        <div class="col-12">
                           <div class="mb-3">
-                            <label class="text-left">Tên tài khoản</label>
+                            <label class="text-left">Tên nhóm</label>
                             <span style="color: red">&nbsp;*</span>
                             <input type="hidden" v-model="model.id"/>
                             <input
-                                id="userName"
-                                v-model.trim="model.userName"
+                                id="name"
+                                v-model.trim="model.name"
                                 type="text"
                                 class="form-control"
-                                placeholder="Nhập tài khoản"
+                                placeholder="Nhập tên nhóm"
                                 :class="{
                                 'is-invalid':
-                                  submitted && $v.model.userName.$error,
+                                  submitted && $v.model.name.$error,
                               }"
                             />
                             <div
-                                v-if="submitted && !$v.model.userName.required"
+                                v-if="submitted && !$v.model.name.required"
                                 class="invalid-feedback"
                             >
-                              Tên tài khoản không được trống.
+                              Tên nhóm không được trống.
                             </div>
                           </div>
                         </div>
-                        <div class="col-6">
+                        <div class="col-12">
                           <div class="mb-3">
-                            <label class="text-left" >Mật khẩu</label>
+                            <label class="text-left" >Mô tả</label>
                             <input type="hidden" v-model="model.id"/>
                             <input
-                                id="password"
-                                v-model="model.password"
-                                type="password"
-                                class="form-control"
-                                placeholder="Nhập mật khẩu"
-                            />
-                          </div>
-                        </div>
-                        <div class="col-6">
-                          <div class="mb-3">
-                            <label class="text-left">Họ</label>
-                            <span style="color: red">&nbsp;*</span>
-                            <input type="hidden" v-model="model.id"/>
-                            <input
-                                id="lastName"
-                                v-model="model.lastName"
+                                id="description"
+                                v-model="model.description"
                                 type="text"
                                 class="form-control"
-                                placeholder="Nhập họ"
-                                :class="{
-                                'is-invalid':
-                                  submitted && $v.model.lastName.$error,
-                              }"
+                                placeholder="Nhập mô tả"
                             />
-                            <div
-                                v-if="submitted && !$v.model.lastName.required"
-                                class="invalid-feedback"
-                            >
-                              Họ không được trống.
-                            </div>
                           </div>
                         </div>
-                        <div class="col-6">
+                        <div class="col-12">
                           <div class="mb-3">
-                            <label class="text-left">Tên</label>
+                            <label class="text-left">Thành viên</label>
                             <span style="color: red">&nbsp;*</span>
-                            <input
-                                id="firstName"
-                                v-model="model.firstName"
-                                type="text"
-                                class="form-control"
-                                placeholder="Nhập tên"
-                                :class="{
+                            <input type="hidden" v-model="model.id"/>
+                            <multiselect 
+                              id="members"
+                              v-model="model.members"
+                              :options="listUser"
+                              label="fullName"
+                              :multiple="true"
+                              selectLabel="Nhấn vào để chọn"
+                              deselectLabel="Nhấn vào để xóa"
+                              track-by="id"
+                              :class="{
                                 'is-invalid':
-                                  submitted && $v.model.firstName.$error,
+                                submitted && $v.model.members.$error,
                               }"
-                            />
+                              placeholder="Chọn thành viên"></multiselect>
                             <div
-                                v-if="submitted && !$v.model.firstName.required"
-                                class="invalid-feedback"
-                            >
-                              Tên không được trống.
+                                v-if="submitted && !$v.model.members.required"
+                                class="invalid-feedback">
+                              Thành viên không được trống.
                             </div>
                           </div>
                         </div>
-                        <div class="col-6">
-                          <div class="mb-3">
-                            <label class="text-left">Số điện thoại</label>
-                            <input type="hidden" v-model="model.id"/>
-                            <input
-                                id="phoneNumber"
-                                v-model="model.phoneNumber"
-                                type="text"
-                                class="form-control"
-                                placeholder="Nhập số điện thoại"
-                            />
-                          </div>
-                        </div>
-                        <div class="col-6">
-                          <div class="mb-3">
-                            <label class="text-left">Email</label>
-                            <input type="hidden" v-model="model.id"/>
-                            <input
-                                id="email"
-                                v-model="model.email"
-                                type="email"
-                                pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
-                                class="form-control"
-                                placeholder="Nhập email"
-                            />
-                          </div>
-                        </div>
-                        <div class="col-6">
-                          <div class="mb-3">
-                            <label class="text-left">Vai trò</label>
-                            <span style="color: red">&nbsp;*</span>
-                            <multiselect
-                                        id="role"
-                                        v-model="model.role"
-                                         :options="listRole"
-                                         label="name"
-                                         :multiple="true"
-                                         selectLabel="Nhấn vào để chọn"
-                                         deselectLabel="Nhấn vào để xóa"
-                                         track-by="id"
-                                         :class="{
-                                'is-invalid':
-                                  submitted && $v.model.role.$error,
-                              }"
-                                         placeholder="Chọn vai trò"
-                                         ></multiselect>
-                                         
-                            <div
-                                v-if="submitted && !$v.model.role.required"
-                                class="invalid-feedback"
-                            >
-                              Vai trò không được trống.
-                            </div>
-                          </div>
-                        </div>
-                        
                       </div>
                       <div class="text-end pt-2">
                         <b-button variant="light" class="w-md" @click="showModal = false">
@@ -595,17 +490,15 @@ export default {
                     <template v-slot:cell(STT)="data">
                       {{ data.index + ((currentPage-1)*perPage) + 1  }}
                     </template>
-                    <template v-slot:cell(role)="row">
-                      <div v-for="(item,index) in row.value" :key="index">
-                              <span>
-                                {{item.name}}
-                              </span>
-                      </div>
+                    <template v-slot:cell(name)="data">&nbsp;&nbsp;
+                      {{data.item.name}}
                     </template>
-                    
-                    <template v-slot:cell(donVi)="data">
-                      <div v-if="data.item.donVi">
-                        <p class="text-white">{{ data.item.donVi.ten }}</p>
+                    <template v-slot:cell(description)="data">&nbsp;&nbsp;
+                      {{data.item.description}}
+                    </template>
+                    <template v-slot:cell(members)="data">
+                      <div v-for="(value , index) in data.item.members" :key="index">
+                        <span> {{value.fullName}}</span>
                       </div>
                     </template>
                     <template v-slot:cell(process)="data">
